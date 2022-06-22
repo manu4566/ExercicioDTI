@@ -2,11 +2,11 @@
 using Microsoft.Azure.Cosmos.Table;
 
 
-namespace Modelo.Infra.Data.Mapping
+namespace Modelo.Infra.Data.Entities
 {
     public class UsuarioEntity : TableEntity
     {
-        //public UsuarioDB() { }
+        public UsuarioEntity() { }
         public UsuarioEntity(string cPF, string nome, string email, string senha, bool admin)
         {
             PartitionKey = cPF;

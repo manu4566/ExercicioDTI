@@ -1,11 +1,5 @@
-﻿using Modelo.Domain.Entities;
+﻿using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
-using Modelo.Infra.Data.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Modelo.Infra.Data.Repository
 {
@@ -17,17 +11,32 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public void InserirProdutos(Produto produto)
+        public void AtualizarProduto(ProdutoEntity produto)
         {
-            ProdutoEntity produtoEntity = new ProdutoEntity(produto);
-            _baseRepository.Insert(produtoEntity, typeof(ProdutoEntity).Name);
-
             throw new NotImplementedException();
         }
 
-        public Produto ObterProdutos(string id)
+        public void InserirProduto(ProdutoEntity produtoEntity)
         {
-            throw new NotImplementedException();
+            _baseRepository.Insert(produtoEntity, typeof(ProdutoEntity).Name);
+           
+        }
+
+        public ProdutoEntity ObterProduto(string id)
+        {
+            ProdutoEntity produtoEntity = (ProdutoEntity) _baseRepository.Select(id.ToString());
+                    
+            return produtoEntity;
+
+        }
+
+        public List<ProdutoEntity> ObterTodosProdutos()
+        {
+            List<ProdutoEntity> produtosEntities = new List<ProdutoEntity>();
+
+            produtosEntities = (List<ProdutoEntity>) _baseRepository.Select(typeof(ProdutoEntity).Name);
+
+            return produtosEntities;
         }
     }
 }

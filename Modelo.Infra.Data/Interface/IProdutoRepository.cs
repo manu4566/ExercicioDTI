@@ -1,16 +1,12 @@
-﻿using Modelo.Domain.Entities;
-using Modelo.Infra.Data.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Modelo.Infra.Data.Entities;
 
 namespace Modelo.Infra.Data.Interface
 {
     public interface IProdutoRepository
     {
-        public Produto ObterProdutos(string id);
-        public void InserirProdutos(Produto produto);
+        public ProdutoEntity ObterProduto(string id);
+        public void InserirProduto(ProdutoEntity produto);
+        public void AtualizarProduto(ProdutoEntity produto);
+        public List<ProdutoEntity> ObterTodosProdutos();
     }
 }

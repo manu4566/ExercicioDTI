@@ -1,6 +1,6 @@
 ﻿
 
-namespace Modelo.Domain.Entities
+namespace Modelo.Domain.Models
 {
     public class Usuario
     {

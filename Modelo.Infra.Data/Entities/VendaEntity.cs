@@ -2,23 +2,22 @@
 using System;
 
 
-namespace Modelo.Infra.Data.Mapping
+namespace Modelo.Infra.Data.Entities
 {
-    public class VendaEntity : TableEntity
-    {
-        //public VendaDB() { }
-        public VendaEntity( string cPF, Guid id, string produtoVendidos)
+    public class VendaEntity : TableEntity    {
+        public VendaEntity() { }
+        public VendaEntity( string cPF, Guid id, string produtoVendidosJson)
         {
             PartitionKey = cPF;
             RowKey = id.ToString();
 
             Id = id.ToString();
             CPF = cPF;
-            ProdutoVendidos = produtoVendidos;
+            ProdutoVendidosJson = produtoVendidosJson;
         }
 
         public string Id { get; set; }
         public string CPF { get; set; }
-        string ProdutoVendidos { get; set; }
+        string ProdutoVendidosJson { get; set; }
     }
 }

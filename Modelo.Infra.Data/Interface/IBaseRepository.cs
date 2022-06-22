@@ -8,12 +8,12 @@ namespace Modelo.Infra.Data.Interface
     {
         void Insert(TableEntity obj, string nomeTabela);
 
-        void Update(TableEntity obj);
+        void Update(TableEntity obj, string nomeTabela);
 
-        void Delete(int id);
+        void Delete(int id, string nomeTabela);
 
-        IList<TableEntity> Select();
+        IList<TableEntity> Select(string nomeTabela);
 
-        TableEntity Select(int id);
+        TableEntity Select(string id, string nomeTabela);
     }
 }

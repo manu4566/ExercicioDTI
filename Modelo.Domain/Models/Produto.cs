@@ -1,5 +1,6 @@
 ﻿
-namespace Modelo.Domain.Entities
+
+namespace Modelo.Domain.Models
 {
     public class Produto
     {
@@ -9,6 +10,7 @@ namespace Modelo.Domain.Entities
         public string Descricao { get; set; }
         public int QtdEstoque { get; set; }
 
+     
 
     }
 }

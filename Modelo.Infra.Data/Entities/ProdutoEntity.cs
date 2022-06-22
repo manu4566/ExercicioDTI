@@ -1,22 +1,13 @@
 ﻿using System;
 using Microsoft.Azure.Cosmos.Table;
-using Modelo.Domain.Entities;
 
-namespace Modelo.Infra.Data.Mapping
+
+namespace Modelo.Infra.Data.Entities
 {
     public class ProdutoEntity : TableEntity
     {
-        public ProdutoEntity(Produto produto)
-        {
-            PartitionKey = produto.Nome;
-            RowKey = produto.Id.ToString();
-
-            Id = produto.Id.ToString();
-            Nome = produto.Nome;
-            Preco = produto.Preco;
-            Descricao = produto.Descricao;
-            QtdEstoque = produto.QtdEstoque;
-        }
+        public ProdutoEntity() { }
+   
         public ProdutoEntity(string nome, Guid id, float preco, string descricao, int qtdEstoque)
         {
             PartitionKey = nome;
