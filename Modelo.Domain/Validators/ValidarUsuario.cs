@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Modelo.Domain.Models;
 using System;
 
 
@@ -8,7 +9,7 @@ namespace Modelo.Domain.Entities
     {
         public ValidarUsuario()
         {
-            RuleFor(c => c.CPF)
+            RuleFor(c => c.Cpf)
                .NotEmpty().WithMessage("Por favor entre com o CPF.")
                .NotNull().WithMessage("Por favor entre com o CPF.");
 

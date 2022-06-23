@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Modelo.Domain.Models;
 using System;
 
 

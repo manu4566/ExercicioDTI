@@ -1,4 +1,5 @@
-﻿using Modelo.Infra.Data.Entities;
+﻿
+using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Modelo.Infra.Data.Repository
         }
         public void InserirUsuario(UsuarioEntity usuarioEntity)
         {
-            _baseRepository.Insert(usuarioEntity, typeof(UsuarioEntity).Name);
+          //  _baseRepository.Insert( usuarioEntity, typeof(UsuarioEntity).Name);
             
         }
 

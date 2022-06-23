@@ -18,15 +18,17 @@ namespace Modelo.Infra.Data.Repository
 
         public void InserirProduto(ProdutoEntity produtoEntity)
         {
-            _baseRepository.Insert(produtoEntity, typeof(ProdutoEntity).Name);
+            _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
            
         }
 
         public ProdutoEntity ObterProduto(string id)
         {
-            ProdutoEntity produtoEntity = (ProdutoEntity) _baseRepository.Select(id.ToString());
-                    
-            return produtoEntity;
+            // ProdutoEntity produtoEntity = (ProdutoEntity) _baseRepository.SelecionarEntidade(id.ToString());
+
+            //  return produtoEntity;
+
+            throw new NotImplementedException();
 
         }
 
@@ -34,7 +36,7 @@ namespace Modelo.Infra.Data.Repository
         {
             List<ProdutoEntity> produtosEntities = new List<ProdutoEntity>();
 
-            produtosEntities = (List<ProdutoEntity>) _baseRepository.Select(typeof(ProdutoEntity).Name);
+            //produtosEntities = (List<ProdutoEntity>) _baseRepository.SelecionarEntidade(typeof(ProdutoEntity).Name);
 
             return produtosEntities;
         }
