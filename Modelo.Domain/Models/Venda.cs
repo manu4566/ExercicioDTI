@@ -6,6 +6,6 @@ namespace Modelo.Domain.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string CPF { get; set; }
-        List<ProdutoVendido> ProdutoVendidos { get; set; }
+        public List<ProdutoVendido> ProdutoVendidos { get; set; }
     }
 }

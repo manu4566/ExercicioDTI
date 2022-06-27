@@ -18,6 +18,6 @@ namespace Modelo.Infra.Data.Entities
 
         public string Id { get; set; }
         public string CPF { get; set; }
-        string ProdutoVendidosJson { get; set; }
+        public string ProdutoVendidosJson { get; set; }
     }
 }

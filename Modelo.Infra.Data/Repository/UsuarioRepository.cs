@@ -18,11 +18,11 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public bool InserirUsuario(Usuario usuario)
+        public async Task<bool> InserirUsuario(Usuario usuario)
         {
-            var usuarioEntity = ConverterUsuarioToUsuarioEntity(usuario);
+            var usuarioEntity = ConverterUsuarioParaUsuarioEntity(usuario);
 
-            var result = _baseRepository.InserirEntidade(usuarioEntity, typeof(UsuarioEntity).Name);
+            var result = await _baseRepository.InserirEntidade(usuarioEntity, typeof(UsuarioEntity).Name);
 
             if (result.Result != null) return true;
 
@@ -34,7 +34,7 @@ namespace Modelo.Infra.Data.Repository
             var usuariosEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<UsuarioEntity>( cpf, typeof(UsuarioEntity).Name);
             //Como o CPF do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse email
 
-            return ConverterUsuarioEntityToUsuario(usuariosEntities.First<UsuarioEntity>());
+            return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
         }
 
         public async Task<Usuario> ObterUsuarioPeloEmail(string email)
@@ -42,10 +42,10 @@ namespace Modelo.Infra.Data.Repository
             var usuariosEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<UsuarioEntity>(email, typeof(UsuarioEntity).Name);
             //Como o email do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse cpf
 
-            return ConverterUsuarioEntityToUsuario(usuariosEntities.First<UsuarioEntity>());
+            return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
         }
 
-        private UsuarioEntity ConverterUsuarioToUsuarioEntity(Usuario usuario)
+        private UsuarioEntity ConverterUsuarioParaUsuarioEntity(Usuario usuario)
         {
             return new UsuarioEntity
             {
@@ -60,7 +60,7 @@ namespace Modelo.Infra.Data.Repository
             };
         }
 
-        private Usuario ConverterUsuarioEntityToUsuario(UsuarioEntity usuarioEntity)
+        private Usuario ConverterUsuarioEntityParaUsuario(UsuarioEntity usuarioEntity)
         {
             return new Usuario
             {

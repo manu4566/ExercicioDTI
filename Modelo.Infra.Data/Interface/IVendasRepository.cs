@@ -8,7 +8,7 @@ namespace Modelo.Infra.Data.Interface
     public interface IVendasRepository
     {
         public Task<Venda> ObterVenda(string id);
-        public bool InserirVenda(Venda venda);        
+        public Task<bool> InserirVenda(Venda venda);        
         public Task<List<Venda>> ObterTodasVendas(string cpf);
     }
 }

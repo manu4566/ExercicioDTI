@@ -2,6 +2,7 @@
 using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
 using System;
+using System.Text.Json;
 
 namespace Modelo.Infra.Data.Repository
 {
@@ -12,35 +13,68 @@ namespace Modelo.Infra.Data.Repository
         {
             _baseRepository = baseRepository;
         }
-        public bool InserirVenda(Venda venda)
-        {
-            var vendaEntity = ConverterVendaToVendaEntity(venda);
 
-            var result = _baseRepository.InserirEntidade(vendaEntity, typeof(VendaEntity).Name);
+        public async Task<bool> InserirVenda(Venda venda)
+        {
+            var vendaEntity = ConverterVendaParaVendaEntity(venda);
+
+            var result = await _baseRepository.InserirEntidade(vendaEntity, typeof(VendaEntity).Name);
 
             if (result.Result != null) return true;
 
             return false;
         }
      
-        public Task<List<Venda>> ObterTodasVendas(string cpf)
+        public async Task<List<Venda>> ObterTodasVendas(string cpf)
         {
-            throw new NotImplementedException();
+            var vendaEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<VendaEntity>(cpf, typeof(VendaEntity).Name);
+
+            return  ConverterVendasEntitiesParaVendas(vendaEntities);
+
         }
 
-        public Task<Venda> ObterVenda(string id)
+        public async Task<Venda> ObterVenda(string id)
         {
-            throw new NotImplementedException();
+            var vendaEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<VendaEntity>(id, typeof(VendaEntity).Name);
+            //Como o id da venda é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir a venda com esse id
+
+            return ConverterVendaEntityParaVenda(vendaEntities.First<VendaEntity>());
         }
 
-        private VendaEntity ConverterVendaToVendaEntity(Venda venda)
+        private VendaEntity ConverterVendaParaVendaEntity(Venda venda)
         {
-            return new VendaEntity 
-            { 
+            return new VendaEntity
+            {
+                PartitionKey = venda.CPF,
+                RowKey = venda.Id.ToString(),
+
+                Id = venda.Id.ToString(),
+                CPF = venda.CPF,
+                ProdutoVendidosJson = JsonSerializer.Serialize(venda.ProdutoVendidos)
             };
         }
 
-      
+        private Venda ConverterVendaEntityParaVenda(VendaEntity vendaEntity)
+        {
+            return new Venda
+            {
+                Id = Guid.Parse(vendaEntity.Id),
+                CPF = vendaEntity.CPF,
+                ProdutoVendidos = JsonSerializer.Deserialize<List<ProdutoVendido>>(vendaEntity.ProdutoVendidosJson)
+            };
+        }
+
+        private List<Venda> ConverterVendasEntitiesParaVendas(List<VendaEntity> vendasEntities)
+        {
+            var vendas = new List<Venda>();
+
+            foreach (var item in vendasEntities)
+            {
+                vendas.Add(ConverterVendaEntityParaVenda(item));
+            }
+
+            return vendas;
+        }
 
     }
 }

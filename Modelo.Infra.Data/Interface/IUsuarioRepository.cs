@@ -9,6 +9,6 @@ namespace Modelo.Infra.Data.Interface
     {
         public Task<Usuario> ObterUsuarioPeloCpf(string cpf);
         public Task<Usuario> ObterUsuarioPeloEmail(string email);
-        public bool InserirUsuario(Usuario usuario);
+        public Task<bool> InserirUsuario(Usuario usuario);
     }
 }

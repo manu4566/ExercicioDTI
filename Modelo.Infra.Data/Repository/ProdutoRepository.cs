@@ -13,22 +13,22 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public bool AtualizarProduto(Produto produto)
+        public async Task<bool> AtualizarProduto(Produto produto)
         {
-            var produtoEntity = ConverterProdutoToProdutoEntity(produto);
+            var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
 
-            var result = _baseRepository.AtualizarEntidade(produtoEntity, typeof(ProdutoEntity).Name);
+            var result = await _baseRepository.AtualizarEntidade(produtoEntity, typeof(ProdutoEntity).Name);
 
             if (result.Result != null) return true;
 
             return false;
         }
 
-        public bool InserirProduto(Produto produto)
+        public async Task<bool> InserirProduto(Produto produto)
         {
-            var produtoEntity = ConverterProdutoToProdutoEntity(produto);
+            var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
 
-            var result = _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
+            var result = await _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
 
             if (result.Result != null) return true;
 
@@ -40,18 +40,18 @@ namespace Modelo.Infra.Data.Repository
 
             var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);
 
-            return ConverterProdutoEntityToProduto(produtoEntity);               
+            return ConverterProdutoEntityParaProduto(produtoEntity);               
 
         }
 
         public async Task<List<Produto>> ObterTodosProdutos()
         {
             var produtosEntites = await _baseRepository.BuscarTodasEntidadesAsync<ProdutoEntity>(typeof(ProdutoEntity).Name);
-            return ConverteProdutosEntitiesToProdutos(produtosEntites);
+            return ConverteProdutosEntitiesParaProdutos(produtosEntites);
 
         }
 
-        private ProdutoEntity ConverterProdutoToProdutoEntity(Produto produtoEntity)
+        private ProdutoEntity ConverterProdutoParaProdutoEntity(Produto produtoEntity)
         {
             return new ProdutoEntity
             {
@@ -66,7 +66,7 @@ namespace Modelo.Infra.Data.Repository
             };
 
         }
-        private Produto ConverterProdutoEntityToProduto(ProdutoEntity produtoEntity)
+        private Produto ConverterProdutoEntityParaProduto(ProdutoEntity produtoEntity)
         {
             return new Produto 
             {
@@ -79,13 +79,13 @@ namespace Modelo.Infra.Data.Repository
                        
         }
 
-        private List<Produto> ConverteProdutosEntitiesToProdutos(List<ProdutoEntity> produtosEntities)
+        private List<Produto> ConverteProdutosEntitiesParaProdutos(List<ProdutoEntity> produtosEntities)
         {
             var produtos = new List<Produto>();
 
             foreach (var item in produtosEntities)
             {
-               produtos.Add(ConverterProdutoEntityToProduto(item));
+               produtos.Add(ConverterProdutoEntityParaProduto(item));
             }
 
             return produtos;
