@@ -1,4 +1,6 @@
-﻿using Modelo.Infra.Data.Entities;
+﻿using Microsoft.WindowsAzure.Storage.Table;
+using Modelo.Domain.Models;
+using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
 
 namespace Modelo.Infra.Data.Repository
@@ -11,34 +13,85 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public void AtualizarProduto(ProdutoEntity produto)
+        public bool AtualizarProduto(Produto produto)
         {
-            throw new NotImplementedException();
+            var produtoEntity = ConverterProdutoToProdutoEntity(produto);
+
+            var result = _baseRepository.AtualizarEntidade(produtoEntity, typeof(ProdutoEntity).Name);
+
+            if (result.Result != null) return true;
+
+            return false;
         }
 
-        public void InserirProduto(ProdutoEntity produtoEntity)
+        public bool InserirProduto(Produto produto)
         {
-            _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
-           
+            var produtoEntity = ConverterProdutoToProdutoEntity(produto);
+
+            var result = _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
+
+            if (result.Result != null) return true;
+
+            return false;
         }
 
-        public ProdutoEntity ObterProduto(string id)
+        public async Task<Produto> ObterProduto(string id)
         {
-            // ProdutoEntity produtoEntity = (ProdutoEntity) _baseRepository.SelecionarEntidade(id.ToString());
 
-            //  return produtoEntity;
+            var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);
 
-            throw new NotImplementedException();
+            return ConverterProdutoEntityToProduto(produtoEntity);               
 
         }
 
-        public List<ProdutoEntity> ObterTodosProdutos()
+        public async Task<List<Produto>> ObterTodosProdutos()
         {
-            List<ProdutoEntity> produtosEntities = new List<ProdutoEntity>();
+            var produtosEntites = await _baseRepository.BuscarTodasEntidadesAsync<ProdutoEntity>(typeof(ProdutoEntity).Name);
+            return ConverteProdutosEntitiesToProdutos(produtosEntites);
 
-            //produtosEntities = (List<ProdutoEntity>) _baseRepository.SelecionarEntidade(typeof(ProdutoEntity).Name);
-
-            return produtosEntities;
         }
+
+        private ProdutoEntity ConverterProdutoToProdutoEntity(Produto produtoEntity)
+        {
+            return new ProdutoEntity
+            {
+                PartitionKey = typeof(ProdutoEntity).Name,
+                RowKey = produtoEntity.Id.ToString(),
+
+                Id = produtoEntity.Id.ToString(),
+                Nome = produtoEntity.Nome,
+                Preco = produtoEntity.Preco,
+                Descricao = produtoEntity.Descricao,
+                QtdEstoque = produtoEntity.QtdEstoque
+            };
+
+        }
+        private Produto ConverterProdutoEntityToProduto(ProdutoEntity produtoEntity)
+        {
+            return new Produto 
+            {
+                Id = Guid.Parse(produtoEntity.Id),
+                Nome = produtoEntity.Nome,
+                Preco = produtoEntity.Preco,
+                Descricao = produtoEntity.Descricao,
+                QtdEstoque = produtoEntity.QtdEstoque
+            };
+                       
+        }
+
+        private List<Produto> ConverteProdutosEntitiesToProdutos(List<ProdutoEntity> produtosEntities)
+        {
+            var produtos = new List<Produto>();
+
+            foreach (var item in produtosEntities)
+            {
+               produtos.Add(ConverterProdutoEntityToProduto(item));
+            }
+
+            return produtos;
+        }
+
+
+     
     }
 }

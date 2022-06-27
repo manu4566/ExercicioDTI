@@ -1,4 +1,5 @@
 ﻿
+using Modelo.Domain.Models;
 using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
 using System;
@@ -16,15 +17,59 @@ namespace Modelo.Infra.Data.Repository
         {
             _baseRepository = baseRepository;
         }
-        public void InserirUsuario(UsuarioEntity usuarioEntity)
+
+        public bool InserirUsuario(Usuario usuario)
         {
-          //  _baseRepository.Insert( usuarioEntity, typeof(UsuarioEntity).Name);
-            
+            var usuarioEntity = ConverterUsuarioToUsuarioEntity(usuario);
+
+            var result = _baseRepository.InserirEntidade(usuarioEntity, typeof(UsuarioEntity).Name);
+
+            if (result.Result != null) return true;
+
+            return false;
         }
 
-        public UsuarioEntity ObterUsuario(string cpf)
+        public async Task<Usuario> ObterUsuarioPeloCpf(string cpf)
         {
-            throw new NotImplementedException();
+            var usuariosEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<UsuarioEntity>( cpf, typeof(UsuarioEntity).Name);
+            //Como o CPF do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse email
+
+            return ConverterUsuarioEntityToUsuario(usuariosEntities.First<UsuarioEntity>());
+        }
+
+        public async Task<Usuario> ObterUsuarioPeloEmail(string email)
+        {
+            var usuariosEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<UsuarioEntity>(email, typeof(UsuarioEntity).Name);
+            //Como o email do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse cpf
+
+            return ConverterUsuarioEntityToUsuario(usuariosEntities.First<UsuarioEntity>());
+        }
+
+        private UsuarioEntity ConverterUsuarioToUsuarioEntity(Usuario usuario)
+        {
+            return new UsuarioEntity
+            {
+                PartitionKey = usuario.Cpf,
+                RowKey = usuario.Email,
+
+                CPF = usuario.Cpf,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Senha = usuario.Senha,
+                Admin = usuario.Admin
+            };
+        }
+
+        private Usuario ConverterUsuarioEntityToUsuario(UsuarioEntity usuarioEntity)
+        {
+            return new Usuario
+            {
+                Cpf = usuarioEntity.CPF,
+                Nome = usuarioEntity.Nome,
+                Email = usuarioEntity.Email,
+                Senha = usuarioEntity.Senha,
+                Admin = usuarioEntity.Admin
+            };
         }
     }
 }

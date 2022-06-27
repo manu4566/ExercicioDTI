@@ -10,7 +10,7 @@ namespace Modelo.Infra.Data.Entities
    
         public ProdutoEntity(string nome, Guid id, float preco, string descricao, int qtdEstoque)
         {
-            PartitionKey = nome;
+            PartitionKey = typeof(ProdutoEntity).Name;
             RowKey = id.ToString();
 
             Id = id.ToString();

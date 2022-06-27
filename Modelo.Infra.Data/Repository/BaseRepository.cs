@@ -32,16 +32,7 @@ namespace Modelo.Infra.Data.Repository
             // Executar a operacao
             return await table.ExecuteAsync(merge);
         }
-
-
-        public async Task<TableResult> SelecionarEntidade(string partitionKey, string rowKey, string nomeTabela) //ok
-        {
-            CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-            TableOperation retrive = TableOperation.Retrieve<TableEntity>(partitionKey, rowKey);
-
-            // Executar a operacao
-            return await table.ExecuteAsync(retrive);
-        }
+         
 
         public async Task<TableResult> DeletarEntidade(TableEntity obj, string nomeTabela) //ok
         {
@@ -51,39 +42,28 @@ namespace Modelo.Infra.Data.Repository
             return await table.ExecuteAsync(deleteOperation);
         }
 
-      
-        public async Task<List<TableEntity>> BuscarTodasEntidadesRowKeyAsync(string rowKey, string nomeTabela)  //ok
+        public async Task<TEntity> BuscarEntidade<TEntity>(string partitionKey, string rowKey, string nomeTabela) where TEntity : TableEntity //ok
         {
             CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-            TableQuery<TableEntity> rangeQuery = new TableQuery<TableEntity>().Where(
-                     TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey));
+            TableOperation retrive = TableOperation.Retrieve<TEntity>(partitionKey, rowKey);
 
-            TableContinuationToken token = null;
+            var result = await table.ExecuteAsync(retrive);
 
-            var tableEntities = new List<TableEntity>();
-            do
-            {
-                var queryResult = await table.ExecuteQuerySegmentedAsync(rangeQuery, token);
-                tableEntities.AddRange(queryResult);
-              
-                //Atualiza o token
-                token = queryResult.ContinuationToken;
+            return (TEntity)result.Result;
 
-            } while (token != null);
-           
-            return tableEntities;           
-          
         }
 
-        public async Task<List<TableEntity>> BuscarTodasEntidadesPartitionKeyAsync(string partitionKey, string nomeTabela)  //ok
+       
+        public async Task<List<TEntity>> BuscarTodasEntidadesPartitionKeyAsync<TEntity>(string partitionKey, string nomeTabela) 
+            where TEntity : TableEntity, new()
         {
             CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-            TableQuery<TableEntity> rangeQuery = new TableQuery<TableEntity>().Where(
+            TableQuery<TEntity> rangeQuery = new TableQuery<TEntity>().Where(
                      TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
 
-            TableContinuationToken token = null;
+            TableContinuationToken token = new TableContinuationToken();
 
-            var tableEntities = new List<TableEntity>();
+            var tableEntities = new List<TEntity>();
             do
             {
                 var queryResult = await table.ExecuteQuerySegmentedAsync(rangeQuery, token);
@@ -98,18 +78,40 @@ namespace Modelo.Infra.Data.Repository
 
         }
 
-        public async Task<List<TableEntity>> BuscarTodasEntidadesAsync(string nomeTabela)
+        public async Task<List<TEntity>> BuscarTodasEntidadesRowKeyAsync<TEntity>(string rowKey, string nomeTabela)
+            where TEntity : TableEntity, new()
         {
             CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-            TableQuery<TableEntity> rangeQuery = new TableQuery<TableEntity>();
+            TableQuery<TEntity> rangeQuery = new TableQuery<TEntity>().Where(
+                     TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey));
 
-            //Inicialize o token de continuação para null para iniciar do início da tabela.
-            TableContinuationToken token = null;
+            TableContinuationToken token = new TableContinuationToken();
 
-            var tableEntities = new List<TableEntity>();
+            var tableEntities = new List<TEntity>();
             do
             {
                 var queryResult = await table.ExecuteQuerySegmentedAsync(rangeQuery, token);
+                tableEntities.AddRange(queryResult);
+
+                //Atualiza o token
+                token = queryResult.ContinuationToken;
+
+            } while (token != null);
+
+            return tableEntities;
+
+        }
+
+        public async Task<List<TEntity>> BuscarTodasEntidadesAsync<TEntity>(string nomeTabela) where TEntity : TableEntity, new()
+        {
+            CloudTable table = _azureRepository.ObterTabela(nomeTabela);            
+            //Inicialize o token de continuação para null para iniciar do início da tabela.
+            TableContinuationToken token = new TableContinuationToken();
+
+            var tableEntities = new List<TEntity>();
+            do
+            {
+                var queryResult = await table.ExecuteQuerySegmentedAsync(new TableQuery<TEntity>(), token);
                 tableEntities.AddRange(queryResult);
 
                 //Atualiza o token

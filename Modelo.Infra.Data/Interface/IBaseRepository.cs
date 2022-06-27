@@ -12,12 +12,12 @@ namespace Modelo.Infra.Data.Interface
 
         Task<TableResult> DeletarEntidade(TableEntity obj, string nomeTabela);
 
-        Task<TableResult> SelecionarEntidade(string partitionKey, string rowKey, string nomeTabela);
+        Task<TEntity> BuscarEntidade<TEntity>(string partitionKey, string rowKey, string nomeTabela) where TEntity : TableEntity;       
 
-        Task<List<TableEntity>> BuscarTodasEntidadesRowKeyAsync(string rowKey, string nomeTabela);       
+        Task<List<TEntity>> BuscarTodasEntidadesAsync<TEntity>(string nomeTabela) where TEntity : TableEntity, new();
 
-        Task<List<TableEntity>> BuscarTodasEntidadesPartitionKeyAsync(string partitionKey, string nomeTabela);
+        Task<List<TEntity>> BuscarTodasEntidadesPartitionKeyAsync<TEntity>(string partitionKey, string nomeTabela) where TEntity : TableEntity, new();
 
-        Task<List<TableEntity>> BuscarTodasEntidadesAsync(string nomeTabela);
+        Task<List<TEntity>> BuscarTodasEntidadesRowKeyAsync<TEntity>(string rowKey, string nomeTabela) where TEntity : TableEntity, new();
     }
 }
