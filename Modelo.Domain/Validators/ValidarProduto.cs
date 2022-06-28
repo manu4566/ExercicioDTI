@@ -7,7 +7,8 @@ namespace Modelo.Domain.Entities
 {
     public class ValidarProduto : AbstractValidator<Produto>
     {
-        public ValidarProduto()       {
+        public ValidarProduto()      
+        {
 
             RuleFor(c => c.Nome)
                 .NotEmpty().WithMessage("Por favor entre com o Nome.")

@@ -1,6 +1,7 @@
 ﻿using Modelo.Domain.Models;
 using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
+using Modelo.Domain.Interfaces;
 using System;
 using System.Text.Json;
 

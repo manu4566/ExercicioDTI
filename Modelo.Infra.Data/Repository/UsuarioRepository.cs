@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.WindowsAzure.Storage.Table;
+using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
 using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
@@ -27,6 +28,18 @@ namespace Modelo.Infra.Data.Repository
             if (result.Result != null) return true;
 
             return false;
+        }
+        public async Task<bool> ConferirExistenciaDeCpfEEmail(string cpf, string email)
+        {
+            var query = new TableQuery<UsuarioEntity>().Where(
+            TableQuery.CombineFilters(
+            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, cpf),
+            TableOperators.Or,
+            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, email)));
+
+            var entidades = await _baseRepository.BuscarEntidadesQueryAsync(query, typeof(UsuarioEntity).Name);
+           
+            return entidades.Any();
         }
 
         public async Task<Usuario> ObterUsuarioPeloCpf(string cpf)
@@ -71,5 +84,7 @@ namespace Modelo.Infra.Data.Repository
                 Admin = usuarioEntity.Admin
             };
         }
+
+       
     }
 }

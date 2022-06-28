@@ -52,7 +52,6 @@ namespace Modelo.Infra.Data.Repository
             return (TEntity)result.Result;
 
         }
-
        
         public async Task<List<TEntity>> BuscarTodasEntidadesPartitionKeyAsync<TEntity>(string partitionKey, string nomeTabela) 
             where TEntity : TableEntity, new()
@@ -100,6 +99,29 @@ namespace Modelo.Infra.Data.Repository
 
             return tableEntities;
 
+        }
+
+        public async Task<List<TEntity>> BuscarEntidadesQueryAsync<TEntity>(TableQuery<TEntity> rangeQuery,string nomeTabela) where TEntity : TableEntity, new()
+        {
+            CloudTable table = _azureRepository.ObterTabela(nomeTabela);
+            //Inicialize o token de continuação para null para iniciar do início da tabela.
+            TableContinuationToken token = new TableContinuationToken();
+
+            var tableEntities = new List<TEntity>();
+
+            do
+            {
+                var queryResult = await table.ExecuteQuerySegmentedAsync(rangeQuery, token);
+                tableEntities.AddRange(queryResult);
+
+                //Atualiza o token
+                token = queryResult.ContinuationToken;
+
+
+                //Faz um loop até que um token de continuação nulo seja recebido, indicando o final da tabela.
+            } while (token != null);
+
+            return tableEntities;
         }
 
         public async Task<List<TEntity>> BuscarTodasEntidadesAsync<TEntity>(string nomeTabela) where TEntity : TableEntity, new()

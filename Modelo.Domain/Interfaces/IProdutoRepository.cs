@@ -1,7 +1,6 @@
 ﻿using Modelo.Domain.Models;
-using Modelo.Infra.Data.Entities;
 
-namespace Modelo.Infra.Data.Interface
+namespace Modelo.Domain.Interfaces
 {
     public interface IProdutoRepository
     {

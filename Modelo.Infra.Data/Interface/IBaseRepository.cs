@@ -19,5 +19,8 @@ namespace Modelo.Infra.Data.Interface
         Task<List<TEntity>> BuscarTodasEntidadesPartitionKeyAsync<TEntity>(string partitionKey, string nomeTabela) where TEntity : TableEntity, new();
 
         Task<List<TEntity>> BuscarTodasEntidadesRowKeyAsync<TEntity>(string rowKey, string nomeTabela) where TEntity : TableEntity, new();
+
+        Task<List<TEntity>> BuscarEntidadesQueryAsync<TEntity>(TableQuery<TEntity> rangeQuery, string nomeTabela) where TEntity : TableEntity, new();
+
     }
 }

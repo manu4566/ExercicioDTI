@@ -1,9 +1,7 @@
 ﻿using Modelo.Domain.Models;
-using Modelo.Infra.Data.Entities;
 using System;
 
-
-namespace Modelo.Infra.Data.Interface
+namespace Modelo.Domain.Interfaces
 {
     public interface IVendasRepository
     {

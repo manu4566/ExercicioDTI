@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
+using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
 using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
@@ -50,7 +51,7 @@ namespace Modelo.Infra.Data.Repository
             return ConverteProdutosEntitiesParaProdutos(produtosEntites);
 
         }
-
+    
         private ProdutoEntity ConverterProdutoParaProdutoEntity(Produto produtoEntity)
         {
             return new ProdutoEntity
@@ -66,6 +67,7 @@ namespace Modelo.Infra.Data.Repository
             };
 
         }
+
         private Produto ConverterProdutoEntityParaProduto(ProdutoEntity produtoEntity)
         {
             return new Produto 
