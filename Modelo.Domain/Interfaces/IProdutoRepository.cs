@@ -8,5 +8,6 @@ namespace Modelo.Domain.Interfaces
         public Task<bool> InserirProduto(Produto produto);
         public Task<bool> AtualizarProduto(Produto produto);
         public Task<List<Produto>> ObterTodosProdutos();
+        public Task<bool> AtualizarProdutos(List<Produto> produtos);
     }
 }

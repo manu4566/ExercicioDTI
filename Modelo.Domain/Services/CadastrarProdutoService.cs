@@ -16,8 +16,7 @@ namespace Modelo.Domain.Services
             _produtoRepository = produtoRepository;
         }
         public async Task<bool> CadastrarProduto(Produto produto)
-        {
-            produto.Id = Guid.NewGuid();
+        {          
             return await _produtoRepository.InserirProduto(produto);                 
         }
 

@@ -5,21 +5,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 namespace Modelo.Infra.Data.Entities
 {
     public class ProdutoEntity : TableEntity
-    {
-        public ProdutoEntity() { }
-   
-        public ProdutoEntity(string nome, Guid id, float preco, string descricao, int qtdEstoque)
-        {
-            PartitionKey = typeof(ProdutoEntity).Name;
-            RowKey = id.ToString();
-
-            Id = id.ToString();
-            Nome = nome;
-            Preco = preco;
-            Descricao = descricao;
-            QtdEstoque = qtdEstoque;
-        }
-
+    {         
         public string Id { get; set; }
         public string Nome { get; set; }
         public float Preco { get; set; }

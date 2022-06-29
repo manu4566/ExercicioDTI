@@ -44,6 +44,8 @@ namespace Modelo.Infra.Data.Repository
 
         private VendaEntity ConverterVendaParaVendaEntity(Venda venda)
         {
+            venda.Id = Guid.NewGuid();
+
             return new VendaEntity
             {
                 PartitionKey = venda.CPF,

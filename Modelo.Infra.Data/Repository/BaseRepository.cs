@@ -27,7 +27,7 @@ namespace Modelo.Infra.Data.Repository
         public async Task<TableResult> AtualizarEntidade(TableEntity obj, string nomeTabela) //ok
         {
             CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-            TableOperation merge = TableOperation.Merge(obj);
+            TableOperation merge = TableOperation.InsertOrMerge(obj);
 
             // Executar a operacao
             return await table.ExecuteAsync(merge);

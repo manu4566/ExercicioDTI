@@ -19,28 +19,66 @@ namespace Modelo.Domain.Services
             _produtoRepository = produtoRepository;
         }
         public async Task<bool> CadastrarVenda(Venda venda)
-        {
-            return await _vendasRepository.InserirVenda(venda);         
+        {   
+           
+            var produtosVendaPermitida = await VerificarEstoque(venda.ProdutoVendidos);
+
+            if(produtosVendaPermitida.Count == venda.ProdutoVendidos.Count)
+            {
+                await AtualizarEstoque(produtosVendaPermitida);
+                return await _vendasRepository.InserirVenda(venda);
+            }        
+            
+            return false;       
         }
 
-        private async Task<bool> AtualizarEstoque(ProdutoVendido produtoVendido)
+        public async Task<Venda> ObterVenda(Guid id)
         {
-            var produtoEstoque = await _produtoRepository.ObterProduto(produtoVendido.Id.ToString());
+           return await _vendasRepository.ObterVenda(id.ToString());
+            //incluindo os itens, seus nomes, valores e o valor total da compra.
 
-            if (produtoEstoque != null)
+        }
+
+        private async Task<List<Produto>> ObterProdutosDaVenda(Guid id)
+        {
+            var venda = await ObterVenda(id);
+            if(venda != null)
             {
-               if(produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
-                {
-                    produtoEstoque.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
+                var produtosEntity =  await _produtoRepository.ObterTodosProdutos();
+                var produtosVendidos = new List<Produto>();
 
-                    return await _produtoRepository.AtualizarProduto(produtoEstoque);                    
+                foreach (var produtoVendido in venda.ProdutoVendidos)
+                {
+                    produtosVendidos.Add( produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First() );
+                }
+
+                return produtosVendidos;
+            }
+
+            return null;
+        }
+
+        private async Task<List<Produto>> VerificarEstoque(List<ProdutoVendido> produtosVendidos)
+        {
+            var produtosEntity = await _produtoRepository.ObterTodosProdutos();
+            var produtosVendaPermitida = new List<Produto>();
+
+            foreach (var produtoVendido in produtosVendidos)
+            {
+                var produtoEstoque = produtosEntity.Where(p => p.Id == produtoVendido.Id).First();           
+                if (produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
+                {
+                    produtosVendaPermitida.Add(produtoEstoque);
                 }
             }
 
-            return false;
+            return produtosVendaPermitida;
         }
 
-      
+        private async Task<bool> AtualizarEstoque(List<Produto> produtosVendaPermitida)
+        {            
+            return await _produtoRepository.AtualizarProdutos(produtosVendaPermitida);
+        }
 
     }
 }

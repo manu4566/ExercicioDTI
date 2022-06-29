@@ -51,19 +51,40 @@ namespace Modelo.Infra.Data.Repository
             return ConverteProdutosEntitiesParaProdutos(produtosEntites);
 
         }
-    
-        private ProdutoEntity ConverterProdutoParaProdutoEntity(Produto produtoEntity)
+
+        public async Task<bool> AtualizarProdutos(List<Produto> produtos)
         {
+            try
+            {
+                foreach (var produto in produtos)
+                {
+                    await AtualizarProduto(produto);
+
+                }
+
+                return true;
+
+            }catch(Exception ex)
+            {
+                return false;
+            }         
+      
+        }
+
+        private ProdutoEntity ConverterProdutoParaProdutoEntity(Produto produto)
+        {
+            produto.Id = Guid.NewGuid();
+
             return new ProdutoEntity
             {
                 PartitionKey = typeof(ProdutoEntity).Name,
-                RowKey = produtoEntity.Id.ToString(),
+                RowKey = produto.Id.ToString(),
 
-                Id = produtoEntity.Id.ToString(),
-                Nome = produtoEntity.Nome,
-                Preco = produtoEntity.Preco,
-                Descricao = produtoEntity.Descricao,
-                QtdEstoque = produtoEntity.QtdEstoque
+                Id = produto.Id.ToString(),
+                Nome = produto.Nome,
+                Preco = produto.Preco,
+                Descricao = produto.Descricao,
+                QtdEstoque = produto.QtdEstoque
             };
 
         }
@@ -92,8 +113,6 @@ namespace Modelo.Infra.Data.Repository
 
             return produtos;
         }
-
-
-     
+        
     }
 }
