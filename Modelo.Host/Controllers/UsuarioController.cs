@@ -7,5 +7,6 @@ namespace Modelo.Host.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+
     }
 }

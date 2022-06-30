@@ -7,12 +7,10 @@ using System.ComponentModel.DataAnnotations;
 namespace Modelo.Application.DTO
 {
     public class MensagemSolicitarVenda
-    {
-        [JsonProperty(PropertyName = "acao")]
+    {      
+        [JsonProperty(PropertyName = "venda")]
         [Required]
+        public VendaDto Venda { get; set; }
 
-        public AcaoVenda acao { get; set; }
-
-        
     }
 }

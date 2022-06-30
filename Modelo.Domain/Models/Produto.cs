@@ -1,5 +1,4 @@
 ﻿
-
 namespace Modelo.Domain.Models
 {
     public class Produto
