@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Modelo.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,9 @@ namespace Modelo.Domain.Interfaces
 {
     public interface IRealizarVendaService
     {
+        Task<bool> CadastrarVenda(Venda venda);
+        Task<DetalhesDaVenda> ObterDetalhesDaVenda(Guid id);       
+        Task<List<Venda>> ObterTodasVendas(string cpf);
+
     }
 }

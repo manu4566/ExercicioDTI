@@ -32,30 +32,61 @@ namespace Modelo.Domain.Services
             return false;       
         }
 
-        public async Task<Venda> ObterVenda(Guid id)
+        public async Task<DetalhesDaVenda> ObterDetalhesDaVenda(Guid id)
         {
-           return await _vendasRepository.ObterVenda(id.ToString());
-            //incluindo os itens, seus nomes, valores e o valor total da compra.
+            
+            var venda = await ObterVenda(id);
+            if(venda == null)
+            {
+                return null;
+            }
+           
+            var produtos = await ObterProdutosDaVenda(venda);
+
+            return new DetalhesDaVenda()
+            { 
+                Id = venda.Id,
+                Cpf = venda.CPF,
+                ProdutoVendidos = produtos,
+                ValorTotal = ObterValorTotalDaVenda(produtos)
+
+            };
 
         }
-
-        private async Task<List<Produto>> ObterProdutosDaVenda(Guid id)
+        private async Task<Venda> ObterVenda(Guid id)
         {
-            var venda = await ObterVenda(id);
-            if(venda != null)
+           return await _vendasRepository.ObterVenda(id.ToString());
+            
+        }
+
+        private async Task<List<Produto>> ObterProdutosDaVenda(Venda venda)
+        {
+            var produtosEntity = await _produtoRepository.ObterTodosProdutos();
+            var produtosVendidos = new List<Produto>();
+
+            foreach (var produtoVendido in venda.ProdutoVendidos)
             {
-                var produtosEntity =  await _produtoRepository.ObterTodosProdutos();
-                var produtosVendidos = new List<Produto>();
-
-                foreach (var produtoVendido in venda.ProdutoVendidos)
-                {
-                    produtosVendidos.Add( produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First() );
-                }
-
-                return produtosVendidos;
+                produtosVendidos.Add(produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First());
             }
 
-            return null;
+            return produtosVendidos;
+        }
+
+        private float ObterValorTotalDaVenda(List<Produto> produtosVendidos)
+        {       
+            float valorTotal = 0;
+
+            foreach (var produtoVendido in produtosVendidos)
+            {
+                valorTotal += produtoVendido.Preco;
+            }
+
+            return valorTotal;
+        }
+
+        public async Task<List<Venda>> ObterTodasVendas(string cpf)
+        {
+            return await _vendasRepository.ObterTodasVendas(cpf);
         }
 
         private async Task<List<Produto>> VerificarEstoque(List<ProdutoVendido> produtosVendidos)
@@ -80,5 +111,6 @@ namespace Modelo.Domain.Services
             return await _produtoRepository.AtualizarProdutos(produtosVendaPermitida);
         }
 
+        
     }
 }
