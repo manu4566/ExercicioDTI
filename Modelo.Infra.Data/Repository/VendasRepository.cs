@@ -48,12 +48,12 @@ namespace Modelo.Infra.Data.Repository
 
             return new VendaEntity
             {
-                PartitionKey = venda.CPF,
+                PartitionKey = venda.Cpf,
                 RowKey = venda.Id.ToString(),
 
                 Id = venda.Id.ToString(),
-                CPF = venda.CPF,
-                ProdutoVendidosJson = JsonSerializer.Serialize(venda.ProdutoVendidos)
+                CPF = venda.Cpf,
+                ProdutoVendidosJson = JsonSerializer.Serialize(venda.ProdutosVendidos)
             };
         }
 
@@ -62,8 +62,8 @@ namespace Modelo.Infra.Data.Repository
             return new Venda
             {
                 Id = Guid.Parse(vendaEntity.Id),
-                CPF = vendaEntity.CPF,
-                ProdutoVendidos = JsonSerializer.Deserialize<List<ProdutoVendido>>(vendaEntity.ProdutoVendidosJson)
+                Cpf = vendaEntity.CPF,
+                ProdutosVendidos = JsonSerializer.Deserialize<List<ProdutoVendido>>(vendaEntity.ProdutoVendidosJson)
             };
         }
 

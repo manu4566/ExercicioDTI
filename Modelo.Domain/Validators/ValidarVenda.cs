@@ -9,7 +9,7 @@ namespace Modelo.Domain.Validators
         public ValidarVenda()
         {         
        
-            RuleFor(c => c.ProdutoVendidos)
+            RuleFor(c => c.ProdutosVendidos)
                 .NotEmpty().WithMessage("Por favor escolha pelo menos um produto.")
                 .NotNull().WithMessage("Por favor escolha pelo menos um produto.");
 

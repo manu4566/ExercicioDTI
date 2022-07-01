@@ -21,9 +21,9 @@ namespace Modelo.Domain.Services
         public async Task<bool> CadastrarVenda(Venda venda)
         {   
            
-            var produtosVendaPermitida = await VerificarEstoque(venda.ProdutoVendidos);
+            var produtosVendaPermitida = await VerificarEstoque(venda.ProdutosVendidos);
 
-            if(produtosVendaPermitida.Count == venda.ProdutoVendidos.Count)
+            if(produtosVendaPermitida.Count == venda.ProdutosVendidos.Count)
             {
                 await AtualizarEstoque(produtosVendaPermitida);
                 return await _vendasRepository.InserirVenda(venda);
@@ -32,7 +32,7 @@ namespace Modelo.Domain.Services
             return false;       
         }
 
-        public async Task<DetalhesDaVenda> ObterDetalhesDaVenda(Guid id)
+        public async Task<DetalhesVenda> ObterDetalhesDaVenda(Guid id)
         {
             
             var venda = await ObterVenda(id);
@@ -43,11 +43,11 @@ namespace Modelo.Domain.Services
            
             var produtos = await ObterProdutosDaVenda(venda);
 
-            return new DetalhesDaVenda()
+            return new DetalhesVenda()
             { 
                 Id = venda.Id,
-                Cpf = venda.CPF,
-                ProdutoVendidos = produtos,
+                Cpf = venda.Cpf,
+                ProdutosVendidos = produtos,
                 ValorTotal = ObterValorTotalDaVenda(produtos)
 
             };
@@ -64,7 +64,7 @@ namespace Modelo.Domain.Services
             var produtosEntity = await _produtoRepository.ObterTodosProdutos();
             var produtosVendidos = new List<Produto>();
 
-            foreach (var produtoVendido in venda.ProdutoVendidos)
+            foreach (var produtoVendido in venda.ProdutosVendidos)
             {
                 produtosVendidos.Add(produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First());
             }

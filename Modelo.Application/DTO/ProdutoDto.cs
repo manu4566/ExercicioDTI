@@ -5,6 +5,9 @@ namespace Modelo.Application.DTO
 {
     public class ProdutoDto
     {
+        [JsonProperty(PropertyName = "id")]     
+        public Guid Id { get; set; }
+
         [JsonProperty(PropertyName = "nome")]
         [Required]
         public string Nome { get; set; }

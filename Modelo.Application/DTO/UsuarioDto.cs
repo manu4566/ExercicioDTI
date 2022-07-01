@@ -19,7 +19,7 @@ namespace Modelo.Application.DTO
 
         [JsonProperty(PropertyName = "senha")]
         [Required]
-        public string senha { get; set; }
+        public string Senha { get; set; }
 
         [JsonProperty(PropertyName = "admin")]
         [Required]
