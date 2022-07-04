@@ -16,6 +16,7 @@ namespace Modelo.Application.Mapping
             }
             return produtosDto;
         }
+
         public ProdutoDto Produto_ProdutoDto(Produto produto)
         {
             return new ProdutoDto
@@ -25,6 +26,19 @@ namespace Modelo.Application.Mapping
                 Nome = produto.Nome,
                 Preco = produto.Preco,
                 QtdEstoque = produto.QtdEstoque
+
+            };
+        }
+
+        public Produto ProdutoDto_Produto(ProdutoDto produtoDto)
+        {
+            return new Produto
+            {
+                Id = produtoDto.Id,
+                Descricao = produtoDto.Descricao,
+                Nome = produtoDto.Nome,
+                Preco = produtoDto.Preco,
+                QtdEstoque = produtoDto.QtdEstoque
 
             };
         }

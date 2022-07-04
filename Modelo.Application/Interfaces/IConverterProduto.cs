@@ -7,5 +7,7 @@ namespace Modelo.Application.Interfaces
     {
         List<ProdutoDto> Produtos_ProdutosDto(List<Produto> produtos);
         ProdutoDto Produto_ProdutoDto(Produto produto);
+        Produto ProdutoDto_Produto(ProdutoDto produtoDto);
+
     }
 }
