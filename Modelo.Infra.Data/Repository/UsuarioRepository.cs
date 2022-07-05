@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Modelo.Infra.Data.Repository
 {
-    internal class UsuarioRepository : IUsuarioRepository
+    public class UsuarioRepository : IUsuarioRepository
     {
         private readonly IBaseRepository _baseRepository;
         public UsuarioRepository(IBaseRepository baseRepository)

@@ -12,8 +12,8 @@ namespace Modelo.Domain.Services
     {
         private readonly IProdutoRepository _produtoRepository;
 
-        private readonly IVendasRepository _vendasRepository;
-        public RealizarVendaService(IVendasRepository vendasRepository, IProdutoRepository produtoRepository)
+        private readonly IVendaRepository _vendasRepository;
+        public RealizarVendaService(IVendaRepository vendasRepository, IProdutoRepository produtoRepository)
         {
             _vendasRepository = vendasRepository;
             _produtoRepository = produtoRepository;

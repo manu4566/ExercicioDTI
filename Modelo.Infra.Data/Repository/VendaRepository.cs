@@ -7,10 +7,10 @@ using System.Text.Json;
 
 namespace Modelo.Infra.Data.Repository
 {
-    public class VendasRepository : IVendasRepository
+    public class VendaRepository : IVendaRepository
     {
         private readonly IBaseRepository _baseRepository;
-        public VendasRepository(IBaseRepository baseRepository)
+        public VendaRepository(IBaseRepository baseRepository)
         {
             _baseRepository = baseRepository;
         }

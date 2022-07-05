@@ -4,7 +4,7 @@ using Modelo.Domain.Models;
 
 namespace Modelo.Application.Mapping
 {
-    internal  class ConverterVenda : IConverterVenda
+    public  class ConverterVenda : IConverterVenda
     {
         private readonly IConverterProduto _converterProduto;
         public ConverterVenda(IConverterProduto converterProduto)
