@@ -8,12 +8,12 @@ namespace Modelo.Application.DTO
     {
         [JsonProperty(PropertyName = "acao")]
         [Required]
-        public AcaoProduto Acao { get; set; }
+        public AcaoProduto? Acao { get; set; }
 
         [JsonProperty(PropertyName = "produto")]
         public ProdutoDto Produto { get; set; }
 
-        [JsonProperty(PropertyName = "buscarId")]
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
     }
 }

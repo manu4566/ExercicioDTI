@@ -10,7 +10,7 @@ namespace Modelo.Application.DTO
     {
         [JsonProperty(PropertyName = "acao")]
         [Required]
-        public AcaoVenda Acao { get; set; }
+        public AcaoVenda? Acao { get; set; }
 
         [JsonProperty(PropertyName = "venda")]       
         public VendaDto Venda { get; set; }

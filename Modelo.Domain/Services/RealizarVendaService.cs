@@ -72,9 +72,9 @@ namespace Modelo.Domain.Services
             return produtosVendidos;
         }
 
-        private float ObterValorTotalDaVenda(List<Produto> produtosVendidos)
+        private double ObterValorTotalDaVenda(List<Produto> produtosVendidos)
         {       
-            float valorTotal = 0;
+            double valorTotal = 0;
 
             foreach (var produtoVendido in produtosVendidos)
             {

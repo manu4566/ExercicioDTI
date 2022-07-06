@@ -5,7 +5,8 @@ namespace Modelo.Application.DTO
 {
     public class ProdutoDto
     {
-        [JsonProperty(PropertyName = "id")]     
+        [JsonProperty(PropertyName = "id")]
+     
         public Guid Id { get; set; }
 
         [JsonProperty(PropertyName = "nome")]
@@ -14,7 +15,7 @@ namespace Modelo.Application.DTO
 
         [JsonProperty(PropertyName = "preco")]
         [Required]
-        public float Preco { get; set; }
+        public double Preco { get; set; }
 
         [JsonProperty(PropertyName = "descricao")]
         [Required]

@@ -8,7 +8,7 @@ namespace Modelo.Application.DTO
     {
         [JsonProperty(PropertyName = "acao")]
         [Required]
-        public AcaoUsuario Acao { get; set; }
+        public AcaoUsuario? Acao { get; set; }
 
         [JsonProperty(PropertyName = "usuario")]
         public UsuarioDto Usuario { get; set; }                

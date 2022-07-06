@@ -11,6 +11,6 @@ namespace Modelo.Domain.Models
         public Guid Id { get; set; }
         public string Cpf { get; set; }
         public List<Produto> ProdutosVendidos { get; set; }
-        public float ValorTotal { get; set; }
+        public double ValorTotal { get; set; }
     }
 }

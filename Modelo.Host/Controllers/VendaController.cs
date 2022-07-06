@@ -5,7 +5,7 @@ using Modelo.Application.Interfaces;
 
 namespace Modelo.Host.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/venda")]
     [ApiController]
     public class VendaController : ControllerBase
     {

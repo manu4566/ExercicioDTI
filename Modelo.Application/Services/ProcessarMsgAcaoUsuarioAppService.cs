@@ -3,6 +3,7 @@
 using Modelo.Application.DTO;
 using Modelo.Application.Interfaces;
 using Modelo.Domain.Interfaces;
+using Modelo.Domain.Validators;
 
 namespace Modelo.Application.Services
 {
@@ -48,11 +49,16 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoUsuario> BuscarUsuario(MensagemAcaoUsuario msgUsuario)
         {
+            var cpf = ValidarCPF.PadronizarCpf(msgUsuario.Cpf);
+
             return new MensagemRetornoAcaoUsuario
             {
-                UsuarioDto = _converterUsuario.Usuario_UsuarioDto( await _cadastrarUsuarioService.BuscarUsuario(msgUsuario.Cpf))
+                
+                UsuarioDto = _converterUsuario.Usuario_UsuarioDto( await _cadastrarUsuarioService.BuscarUsuario(cpf))
             };
         }
+
+
 
     }
 }

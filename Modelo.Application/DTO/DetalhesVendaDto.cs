@@ -15,6 +15,6 @@ namespace Modelo.Application.DTO
         public List<ProdutoDto> ProdutoVendidosDto { get; set; }
 
         [JsonProperty("valorTotal")]
-        public float ValorTotal { get; set; }
+        public double ValorTotal { get; set; }
     }
 }
