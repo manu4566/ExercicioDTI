@@ -15,7 +15,7 @@ namespace Modelo.Application.DTO
         [JsonProperty(PropertyName = "venda")]       
         public VendaDto Venda { get; set; }
 
-        [JsonProperty(PropertyName = "buscarId")]       
+        [JsonProperty(PropertyName = "id")]       
         public Guid Id { get; set; }
 
         [JsonProperty(PropertyName = "cpf")]    

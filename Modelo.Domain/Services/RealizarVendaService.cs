@@ -1,10 +1,5 @@
 ﻿using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Modelo.Domain.Services
 {
@@ -21,11 +16,11 @@ namespace Modelo.Domain.Services
         public async Task<bool> CadastrarVenda(Venda venda)
         {   
            
-            var produtosVendaPermitida = await VerificarEstoque(venda.ProdutosVendidos);
+            var produtosVendaPermitidaAtualizado = await VerificarEstoque(venda.ProdutosVendidos);
 
-            if(produtosVendaPermitida.Count == venda.ProdutosVendidos.Count)
+            if(produtosVendaPermitidaAtualizado.Count == venda.ProdutosVendidos.Count)
             {
-                await AtualizarEstoque(produtosVendaPermitida);
+                await AtualizarEstoque(produtosVendaPermitidaAtualizado);
                 return await _vendasRepository.InserirVenda(venda);
             }        
             
@@ -92,18 +87,21 @@ namespace Modelo.Domain.Services
         private async Task<List<Produto>> VerificarEstoque(List<ProdutoVendido> produtosVendidos)
         {
             var produtosEntity = await _produtoRepository.ObterTodosProdutos();
-            var produtosVendaPermitida = new List<Produto>();
+            var produtosVendaPermitidaAtualizado = new List<Produto>();
 
             foreach (var produtoVendido in produtosVendidos)
             {
                 var produtoEstoque = produtosEntity.Where(p => p.Id == produtoVendido.Id).First();           
                 if (produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
                 {
-                    produtosVendaPermitida.Add(produtoEstoque);
+                    var produtoAtt = produtoEstoque;
+                    produtoAtt.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
+
+                    produtosVendaPermitidaAtualizado.Add(produtoEstoque);
                 }
             }
 
-            return produtosVendaPermitida;
+            return produtosVendaPermitidaAtualizado;
         }
 
         private async Task<bool> AtualizarEstoque(List<Produto> produtosVendaPermitida)

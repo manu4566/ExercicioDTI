@@ -36,7 +36,7 @@ namespace Modelo.Application.Mapping
         {
             return new ProdutoVendido
             {
-                Id = new Guid(),
+                Id = produtoVendidoDto.Id,
                 QtdVendida = produtoVendidoDto.QtdVendida
 
             };

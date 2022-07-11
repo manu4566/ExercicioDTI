@@ -27,6 +27,8 @@ namespace Modelo.Infra.Data.Repository
 
         public async Task<bool> InserirProduto(Produto produto)
         {
+            produto.Id = Guid.NewGuid();
+
             var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
 
             var result = await _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
@@ -73,7 +75,7 @@ namespace Modelo.Infra.Data.Repository
 
         private ProdutoEntity ConverterProdutoParaProdutoEntity(Produto produto)
         {
-            produto.Id = Guid.NewGuid();
+           // produto.Id = Guid.NewGuid();
 
             return new ProdutoEntity
             {

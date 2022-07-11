@@ -16,6 +16,7 @@ namespace Modelo.Infra.Data.Repository
         
         public async Task<TableResult> InserirEntidade(TableEntity obj, string nomeTabela) //ok
         {
+
            CloudTable table = _azureRepository.ObterTabela(nomeTabela);
            TableOperation insert = TableOperation.Insert(obj);
 
