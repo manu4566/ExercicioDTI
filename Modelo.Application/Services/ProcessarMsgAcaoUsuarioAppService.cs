@@ -49,7 +49,7 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoUsuario> BuscarUsuario(MensagemAcaoUsuario msgUsuario)
         {
-            var cpf = ValidarCPF.PadronizarCpf(msgUsuario.Cpf);
+            var cpf = CpfUteis.PadronizarCpf(msgUsuario.Cpf);
 
             return new MensagemRetornoAcaoUsuario
             {

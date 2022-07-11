@@ -74,9 +74,7 @@ namespace Modelo.Infra.Data.Repository
         }
 
         private ProdutoEntity ConverterProdutoParaProdutoEntity(Produto produto)
-        {
-           // produto.Id = Guid.NewGuid();
-
+        {         
             return new ProdutoEntity
             {
                 PartitionKey = typeof(ProdutoEntity).Name,

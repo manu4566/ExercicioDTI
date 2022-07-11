@@ -3,7 +3,7 @@
 
 namespace Modelo.Domain.Validators
 {
-	public static class ValidarCPF
+	public static class CpfUteis
 	{
 		public static bool VerificarCpf(string cpf)
 		{

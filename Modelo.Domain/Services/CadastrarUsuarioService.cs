@@ -17,11 +17,11 @@ namespace Modelo.Domain.Services
             
             var condicaoCpfEmail = await _usuarioRepository.ConferirExistenciaDeCpfEEmail(usuario.Cpf,usuario.Email);
            
-            var condicaoCPFValido = ValidarCPF.VerificarCpf(usuario.Cpf);
+            var condicaoCPFValido = CpfUteis.VerificarCpf(usuario.Cpf);
 
             if (!condicaoCpfEmail && condicaoCPFValido)
             {
-                usuario.Cpf = ValidarCPF.PadronizarCpf(usuario.Cpf);
+                usuario.Cpf = CpfUteis.PadronizarCpf(usuario.Cpf);
 
                 var result = await _usuarioRepository.InserirUsuario(usuario);
 

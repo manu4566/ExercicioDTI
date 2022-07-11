@@ -14,16 +14,15 @@ namespace Modelo.Domain.Services
             _produtoRepository = produtoRepository;
         }
         public async Task<bool> CadastrarVenda(Venda venda)
-        {   
-           
-            var produtosVendaPermitidaAtualizado = await VerificarEstoque(venda.ProdutosVendidos);
+        {
+            var produtosVendaPermitida = await VerificarEstoque(venda.ProdutosVendidos);
 
-            if(produtosVendaPermitidaAtualizado.Count == venda.ProdutosVendidos.Count)
+            if (produtosVendaPermitida.Count.Equals(venda.ProdutosVendidos.Count))
             {
-                await AtualizarEstoque(produtosVendaPermitidaAtualizado);
+                await AtualizarEstoque(produtosVendaPermitida);
                 return await _vendasRepository.InserirVenda(venda);
-            }        
-            
+            }
+
             return false;       
         }
 
@@ -43,7 +42,7 @@ namespace Modelo.Domain.Services
                 Id = venda.Id,
                 Cpf = venda.Cpf,
                 ProdutosVendidos = produtos,
-                ValorTotal = ObterValorTotalDaVenda(produtos)
+                ValorTotal = ObterValorTotalDaVenda(produtos, venda)
 
             };
 
@@ -67,13 +66,14 @@ namespace Modelo.Domain.Services
             return produtosVendidos;
         }
 
-        private double ObterValorTotalDaVenda(List<Produto> produtosVendidos)
+        private double ObterValorTotalDaVenda(List<Produto> produtos, Venda venda )
         {       
             double valorTotal = 0;
 
-            foreach (var produtoVendido in produtosVendidos)
+            foreach (var produto in produtos)
             {
-                valorTotal += produtoVendido.Preco;
+                var produtoVendido = venda.ProdutosVendidos.Where<ProdutoVendido>(p=> p.Id == produto.Id).First();              
+                valorTotal += produto.Preco * produtoVendido.QtdVendida;
             }
 
             return valorTotal;
@@ -87,21 +87,20 @@ namespace Modelo.Domain.Services
         private async Task<List<Produto>> VerificarEstoque(List<ProdutoVendido> produtosVendidos)
         {
             var produtosEntity = await _produtoRepository.ObterTodosProdutos();
-            var produtosVendaPermitidaAtualizado = new List<Produto>();
+            var produtosVendaPermitida = new List<Produto>();
 
             foreach (var produtoVendido in produtosVendidos)
             {
                 var produtoEstoque = produtosEntity.Where(p => p.Id == produtoVendido.Id).First();           
                 if (produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
-                {
-                    var produtoAtt = produtoEstoque;
-                    produtoAtt.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
+                {                  
+                    produtoEstoque.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
 
-                    produtosVendaPermitidaAtualizado.Add(produtoEstoque);
+                    produtosVendaPermitida.Add(produtoEstoque);
                 }
             }
 
-            return produtosVendaPermitidaAtualizado;
+            return produtosVendaPermitida;
         }
 
         private async Task<bool> AtualizarEstoque(List<Produto> produtosVendaPermitida)

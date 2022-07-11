@@ -4,6 +4,7 @@ using Modelo.Infra.Data.Interface;
 using Modelo.Domain.Interfaces;
 using System;
 using System.Text.Json;
+using System.Net;
 
 namespace Modelo.Infra.Data.Repository
 {
@@ -17,12 +18,14 @@ namespace Modelo.Infra.Data.Repository
 
         public async Task<bool> InserirVenda(Venda venda)
         {
-            var vendaEntity = ConverterVendaParaVendaEntity(venda);
+                venda.Id = Guid.NewGuid();
 
-            var result = await _baseRepository.InserirEntidade(vendaEntity, typeof(VendaEntity).Name);
+                var vendaEntity = ConverterVendaParaVendaEntity(venda);
 
-            if (result.Result != null) return true;
+                var result = await _baseRepository.InserirEntidade(vendaEntity, typeof(VendaEntity).Name);
 
+                if (result.Result != null) return true;
+             
             return false;
         }
      
@@ -43,9 +46,7 @@ namespace Modelo.Infra.Data.Repository
         }
 
         private VendaEntity ConverterVendaParaVendaEntity(Venda venda)
-        {
-            venda.Id = Guid.NewGuid();
-
+        {      
             return new VendaEntity
             {
                 PartitionKey = venda.Cpf,
