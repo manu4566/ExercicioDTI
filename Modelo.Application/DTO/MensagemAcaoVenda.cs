@@ -20,5 +20,8 @@ namespace Modelo.Application.DTO
 
         [JsonProperty(PropertyName = "cpf")]    
         public string Cpf { get; set; }
+
+        [JsonProperty(PropertyName = "erro")]
+        public string Erro { get; set; }
     }
 }

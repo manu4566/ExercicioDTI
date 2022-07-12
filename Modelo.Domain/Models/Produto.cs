@@ -7,7 +7,8 @@ namespace Modelo.Domain.Models
         public string Nome { get; set; }
         public double Preco { get; set; }
         public string Descricao { get; set; }
-        public int QtdEstoque { get; set; }    
+        public int QtdEstoque { get; set; }
+        public string Erro { get; set; }
 
     }
 }

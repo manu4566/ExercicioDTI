@@ -47,7 +47,7 @@ namespace Modelo.Infra.Data.Repository
                 var entidades = await _baseRepository.BuscarEntidadesQueryAsync(query, typeof(UsuarioEntity).Name);
 
                 return entidades.Any();
-            }           
+            }          
             catch (Exception ex)
             {
                 throw ex;

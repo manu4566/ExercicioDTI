@@ -9,7 +9,7 @@ namespace Modelo.Domain.Interfaces
 {
     public interface ICadastrarProdutoService
     {
-        Task<bool> CadastrarProduto(Produto produto);
+        Task CadastrarProduto(Produto produto);
 
         Task<List<Produto>> ObterTodosProdutos();
 

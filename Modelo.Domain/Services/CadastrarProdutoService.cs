@@ -15,9 +15,16 @@ namespace Modelo.Domain.Services
         {
             _produtoRepository = produtoRepository;
         }
-        public async Task<bool> CadastrarProduto(Produto produto)
-        {          
-            return await _produtoRepository.InserirProduto(produto);                 
+        public async Task CadastrarProduto(Produto produto)
+        {
+            try
+            {
+                await _produtoRepository.InserirProduto(produto);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }      
         }
 
         public async Task<List<Produto>> ObterTodosProdutos()

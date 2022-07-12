@@ -12,30 +12,50 @@ namespace Modelo.Domain.Services
         {
             _usuarioRepository = usuarioRepository;
         } 
-        public async Task<bool> CadastrarUsuario(Usuario usuario)
-        { 
-            
-            var condicaoCpfEmail = await _usuarioRepository.ConferirExistenciaDeCpfEEmail(usuario.Cpf,usuario.Email);
-           
-            var condicaoCPFValido = CpfUteis.VerificarCpf(usuario.Cpf);
-
-            if (!condicaoCpfEmail && condicaoCPFValido)
+        public async Task CadastrarUsuario(Usuario usuario)
+        {
+            try
             {
-                usuario.Cpf = CpfUteis.PadronizarCpf(usuario.Cpf);
+                if (CpfUteis.VerificarCpf(usuario.Cpf))
+                {
+                    var condicaoCpfEmail = await _usuarioRepository.ConferirExistenciaDeCpfEEmail(usuario.Cpf, usuario.Email);
+                  
+                    if (!condicaoCpfEmail)
+                    {
+                        usuario.Cpf = CpfUteis.PadronizarCpf(usuario.Cpf);
 
-                var result = await _usuarioRepository.InserirUsuario(usuario);
+                        await _usuarioRepository.InserirUsuario(usuario);
 
-                return result;
+                    }
+                    else
+                    {
+                        usuario.Erro = "Erro: CPF ou Email já cadastrados.";
+                    }
+                }
+                else
+                {
+                    usuario.Erro = "Erro: Cpf não é valido.";
+                }
+
             }
-
-            // Melhorar a Tratativa de erro???
-            return false;      
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
+             
         }
 
         public async Task<Usuario> BuscarUsuario(string cpf)
         {
-            //Se o usuario não existir???? Como saber??? É aqui que acontece a tratativa de erro? 
-           return await _usuarioRepository.ObterUsuarioPeloCpf(cpf);
+            try
+            {  
+                return await _usuarioRepository.ObterUsuarioPeloCpf(cpf);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }       
             
         }
 
