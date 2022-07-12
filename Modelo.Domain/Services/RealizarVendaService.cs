@@ -13,57 +13,88 @@ namespace Modelo.Domain.Services
             _vendasRepository = vendasRepository;
             _produtoRepository = produtoRepository;
         }
-        public async Task<bool> CadastrarVenda(Venda venda)
+        public async Task CadastrarVenda(Venda venda)
         {
-            var produtosVendaPermitida = await VerificarEstoque(venda.ProdutosVendidos);
-
-            if (produtosVendaPermitida.Count.Equals(venda.ProdutosVendidos.Count))
+            try
             {
-                await AtualizarEstoque(produtosVendaPermitida);
-                return await _vendasRepository.InserirVenda(venda);
-            }
+                var produtosVendaPermitida = await VerificarEstoque(venda.ProdutosVendidos);
 
-            return false;       
+                if (produtosVendaPermitida.Count.Equals(venda.ProdutosVendidos.Count))
+                {
+                    await AtualizarEstoque(produtosVendaPermitida);
+                    await _vendasRepository.InserirVenda(venda);
+                }
+                else
+                {
+                    venda.Erro = "Erro: Pelo menos um produto não tem a quantidade solitada no estoque.";
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+                 
         }
 
         public async Task<DetalhesVenda> ObterDetalhesDaVenda(Guid id)
         {
-            
-            var venda = await ObterVenda(id);
-            if(venda == null)
+            try
             {
-                return null;
+                var venda = await ObterVenda(id);
+                if (venda == null)
+                {
+                    return null;
+                }
+
+                var produtos = await ObterProdutosDaVenda(venda);
+
+                return new DetalhesVenda()
+                {
+                    Id = venda.Id,
+                    Cpf = venda.Cpf,
+                    ProdutosVendidos = produtos,
+                    ValorTotal = ObterValorTotalDaVenda(produtos, venda)
+
+                };
             }
-           
-            var produtos = await ObterProdutosDaVenda(venda);
-
-            return new DetalhesVenda()
-            { 
-                Id = venda.Id,
-                Cpf = venda.Cpf,
-                ProdutosVendidos = produtos,
-                ValorTotal = ObterValorTotalDaVenda(produtos, venda)
-
-            };
+            catch(Exception ex)
+            {
+                throw ex;
+            }          
 
         }
+     
         private async Task<Venda> ObterVenda(Guid id)
         {
-           return await _vendasRepository.ObterVenda(id.ToString());
+            try
+            {
+                return await _vendasRepository.ObterVenda(id.ToString());
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }      
             
         }
 
         private async Task<List<Produto>> ObterProdutosDaVenda(Venda venda)
         {
-            var produtosEntity = await _produtoRepository.ObterTodosProdutos();
-            var produtosVendidos = new List<Produto>();
-
-            foreach (var produtoVendido in venda.ProdutosVendidos)
+            try
             {
-                produtosVendidos.Add(produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First());
-            }
+                var produtosEntity = await _produtoRepository.ObterTodosProdutos();
+                var produtosVendidos = new List<Produto>();
 
-            return produtosVendidos;
+                foreach (var produtoVendido in venda.ProdutosVendidos)
+                {
+                    produtosVendidos.Add(produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First());
+                }
+
+                return produtosVendidos;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }          
         }
 
         private double ObterValorTotalDaVenda(List<Produto> produtos, Venda venda )
@@ -81,31 +112,56 @@ namespace Modelo.Domain.Services
 
         public async Task<List<Venda>> ObterTodasVendas(string cpf)
         {
-            return await _vendasRepository.ObterTodasVendas(cpf);
+            try
+            {
+                return await _vendasRepository.ObterTodasVendas(cpf);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+         
         }
 
         private async Task<List<Produto>> VerificarEstoque(List<ProdutoVendido> produtosVendidos)
         {
-            var produtosEntity = await _produtoRepository.ObterTodosProdutos();
-            var produtosVendaPermitida = new List<Produto>();
-
-            foreach (var produtoVendido in produtosVendidos)
+            try
             {
-                var produtoEstoque = produtosEntity.Where(p => p.Id == produtoVendido.Id).First();           
-                if (produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
-                {                  
-                    produtoEstoque.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
+                var produtosEntity = await _produtoRepository.ObterTodosProdutos();
+                var produtosVendaPermitida = new List<Produto>();
 
-                    produtosVendaPermitida.Add(produtoEstoque);
+                foreach (var produtoVendido in produtosVendidos)
+                {
+                    var produtoEstoque = produtosEntity.Where(p => p.Id == produtoVendido.Id).First();
+                    if (produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
+                    {
+                        produtoEstoque.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
+
+                        produtosVendaPermitida.Add(produtoEstoque);
+                    }
                 }
-            }
 
-            return produtosVendaPermitida;
+                return produtosVendaPermitida;
+
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+         
         }
 
-        private async Task<bool> AtualizarEstoque(List<Produto> produtosVendaPermitida)
-        {            
-            return await _produtoRepository.AtualizarProdutos(produtosVendaPermitida);
+        private async Task AtualizarEstoque(List<Produto> produtosVendaPermitida)
+        {
+            try
+            {
+                await _produtoRepository.AtualizarProdutos(produtosVendaPermitida);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
         

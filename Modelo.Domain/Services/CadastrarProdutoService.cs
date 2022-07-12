@@ -29,12 +29,27 @@ namespace Modelo.Domain.Services
 
         public async Task<List<Produto>> ObterTodosProdutos()
         {
-            return await _produtoRepository.ObterTodosProdutos();
+            try
+            {
+                return await _produtoRepository.ObterTodosProdutos();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+           
         }
 
         public async Task<Produto> ObterProduto(string id)
         {
-            return await _produtoRepository.ObterProduto(id);
+            try
+            {
+                return await _produtoRepository.ObterProduto(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
         }
     }
 }

@@ -22,14 +22,7 @@ namespace Modelo.Infra.Data.Repository
                 var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
 
                 await _baseRepository.AtualizarEntidade(produtoEntity, typeof(ProdutoEntity).Name);
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel atualizar o produto.");
-                }
-            }
+            }         
             catch (Exception ex)
             {
                 throw ex;
