@@ -16,13 +16,11 @@ namespace Modelo.Infra.Data.Repository
         
         public async Task<TableResult> InserirEntidade(TableEntity obj, string nomeTabela) //ok
         {
+            CloudTable table = _azureRepository.ObterTabela(nomeTabela);
+            TableOperation insert = TableOperation.Insert(obj);
 
-           CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-           TableOperation insert = TableOperation.Insert(obj);
+            return await table.ExecuteAsync(insert);
 
-            // Executar a operacao
-            return  await table.ExecuteAsync(insert);                    
-      
         }
 
         public async Task<TableResult> AtualizarEntidade(TableEntity obj, string nomeTabela) //ok

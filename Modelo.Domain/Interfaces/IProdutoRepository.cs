@@ -5,9 +5,9 @@ namespace Modelo.Domain.Interfaces
     public interface IProdutoRepository
     {
         public Task<Produto> ObterProduto(string id);
-        public Task<bool> InserirProduto(Produto produto);
-        public Task<bool> AtualizarProduto(Produto produto);
+        public Task InserirProduto(Produto produto);
+        public Task AtualizarProduto(Produto produto);
         public Task<List<Produto>> ObterTodosProdutos();
-        public Task<bool> AtualizarProdutos(List<Produto> produtos);
+        public Task AtualizarProdutos(List<Produto> produtos);
     }
 }

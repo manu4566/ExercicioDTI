@@ -16,33 +16,72 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public async Task<bool> InserirVenda(Venda venda)
+        public async Task InserirVenda(Venda venda)
         {
+            try
+            {
                 venda.Id = Guid.NewGuid();
 
                 var vendaEntity = ConverterVendaParaVendaEntity(venda);
 
-                var result = await _baseRepository.InserirEntidade(vendaEntity, typeof(VendaEntity).Name);
-
-                if (result.Result != null) return true;
-             
-            return false;
+                await _baseRepository.InserirEntidade(vendaEntity, typeof(VendaEntity).Name);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
      
         public async Task<List<Venda>> ObterTodasVendas(string cpf)
         {
-            var vendaEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<VendaEntity>(cpf, typeof(VendaEntity).Name);
+            try
+            {
+                var vendaEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<VendaEntity>(cpf, typeof(VendaEntity).Name);
 
-            return  ConverterVendasEntitiesParaVendas(vendaEntities);
+                return ConverterVendasEntitiesParaVendas(vendaEntities);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel encontrar as vendas associadas ao CPF");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
 
         }
 
         public async Task<Venda> ObterVenda(string id)
         {
-            var vendaEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<VendaEntity>(id, typeof(VendaEntity).Name);
-            //Como o id da venda é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir a venda com esse id
+            try
+            {
+                var vendaEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<VendaEntity>(id, typeof(VendaEntity).Name);
+                //Como o id da venda é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir a venda com esse id
 
-            return ConverterVendaEntityParaVenda(vendaEntities.First<VendaEntity>());
+                return ConverterVendaEntityParaVenda(vendaEntities.First<VendaEntity>());
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel encontrar a venda");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }          
         }
 
         private VendaEntity ConverterVendaParaVendaEntity(Venda venda)

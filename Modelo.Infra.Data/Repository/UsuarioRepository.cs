@@ -6,6 +6,7 @@ using Modelo.Infra.Data.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,43 +20,93 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public async Task<bool> InserirUsuario(Usuario usuario)
+        public async Task InserirUsuario(Usuario usuario)
         {
-            var usuarioEntity = ConverterUsuarioParaUsuarioEntity(usuario);
+            try
+            {
+                var usuarioEntity = ConverterUsuarioParaUsuarioEntity(usuario);
 
-            var result = await _baseRepository.InserirEntidade(usuarioEntity, typeof(UsuarioEntity).Name);
-
-            if (result.Result != null) return true;
-
-            return false;
+                await _baseRepository.InserirEntidade(usuarioEntity, typeof(UsuarioEntity).Name);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }             
         }
+
         public async Task<bool> ConferirExistenciaDeCpfEEmail(string cpf, string email)
         {
-            var query = new TableQuery<UsuarioEntity>().Where(
-            TableQuery.CombineFilters(
-            TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, cpf),
-            TableOperators.Or,
-            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, email)));
+            try
+            {
+                var query = new TableQuery<UsuarioEntity>().Where(
+                   TableQuery.CombineFilters(
+                   TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, cpf),
+                   TableOperators.Or,
+                   TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, email)));
 
-            var entidades = await _baseRepository.BuscarEntidadesQueryAsync(query, typeof(UsuarioEntity).Name);
-           
-            return entidades.Any();
+                var entidades = await _baseRepository.BuscarEntidadesQueryAsync(query, typeof(UsuarioEntity).Name);
+
+                return entidades.Any();
+            }           
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+ 
         }
 
         public async Task<Usuario> ObterUsuarioPeloCpf(string cpf)
         {
-            var usuariosEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<UsuarioEntity>( cpf, typeof(UsuarioEntity).Name);
-            //Como o CPF do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse email
+            try
+            {
+                var usuariosEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<UsuarioEntity>(cpf, typeof(UsuarioEntity).Name);
+                //Como o CPF do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse email
 
-            return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+                return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel encontrar o usuario pelo Cpf.");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+         
         }
 
         public async Task<Usuario> ObterUsuarioPeloEmail(string email)
         {
-            var usuariosEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<UsuarioEntity>(email, typeof(UsuarioEntity).Name);
-            //Como o email do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse cpf
+            try 
+            {
+                var usuariosEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<UsuarioEntity>(email, typeof(UsuarioEntity).Name);
+                //Como o email do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse cpf
 
-            return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+                return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel encontrar o usuario pelo email.");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+           
         }
 
         private UsuarioEntity ConverterUsuarioParaUsuarioEntity(Usuario usuario)

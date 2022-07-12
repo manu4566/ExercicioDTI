@@ -3,6 +3,7 @@ using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
 using Modelo.Infra.Data.Entities;
 using Modelo.Infra.Data.Interface;
+using System.Net;
 
 namespace Modelo.Infra.Data.Repository
 {
@@ -14,61 +15,105 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public async Task<bool> AtualizarProduto(Produto produto)
+        public async Task AtualizarProduto(Produto produto)
         {
-            var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
+            try 
+            {
+                var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
 
-            var result = await _baseRepository.AtualizarEntidade(produtoEntity, typeof(ProdutoEntity).Name);
-
-            if (result.Result != null) return true;
-
-            return false;
+                await _baseRepository.AtualizarEntidade(produtoEntity, typeof(ProdutoEntity).Name);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel atualizar o produto.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<bool> InserirProduto(Produto produto)
+        public async Task InserirProduto(Produto produto)
         {
-            produto.Id = Guid.NewGuid();
+            try
+            {
+                produto.Id = Guid.NewGuid();
 
-            var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
+                var produtoEntity = ConverterProdutoParaProdutoEntity(produto);
 
-            var result = await _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);
+                await _baseRepository.InserirEntidade(produtoEntity, typeof(ProdutoEntity).Name);               
 
-            if (result.Result != null) return true;
-
-            return false;
+            }          
+            catch(Exception ex)
+            {
+                throw ex;
+            }       
+         
         }
 
         public async Task<Produto> ObterProduto(string id)
-        {
-
-            var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);
-
-            return ConverterProdutoEntityParaProduto(produtoEntity);               
-
+        {            
+            try 
+            {
+               var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);
+               return ConverterProdutoEntityParaProduto(produtoEntity);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel obter o produto.");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<Produto>> ObterTodosProdutos()
         {
-            var produtosEntites = await _baseRepository.BuscarTodasEntidadesAsync<ProdutoEntity>(typeof(ProdutoEntity).Name);
-            return ConverteProdutosEntitiesParaProdutos(produtosEntites);
-
+            try
+            {
+                var produtosEntities = await _baseRepository.BuscarTodasEntidadesAsync<ProdutoEntity>(typeof(ProdutoEntity).Name);
+                return ConverteProdutosEntitiesParaProdutos(produtosEntities);
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
+                {
+                    throw new Exception("Não foi possivel obter todos os produtos.");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<bool> AtualizarProdutos(List<Produto> produtos)
+        public async Task AtualizarProdutos(List<Produto> produtos)
         {
-            try
+            try           
             {
                 foreach (var produto in produtos)
                 {
                     await AtualizarProduto(produto);
-
                 }
-
-                return true;
 
             }catch(Exception ex)
             {
-                return false;
+                throw ex;
             }         
       
         }
