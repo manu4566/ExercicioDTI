@@ -63,18 +63,7 @@ namespace Modelo.Infra.Data.Repository
                 //Como o CPF do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse email
 
                 return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel encontrar o usuario pelo Cpf.");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+            }            
             catch (Exception ex)
             {
                 throw ex;
@@ -90,18 +79,7 @@ namespace Modelo.Infra.Data.Repository
                 //Como o email do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse cpf
 
                 return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel encontrar o usuario pelo email.");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+            }            
             catch (Exception ex)
             {
                 throw ex;

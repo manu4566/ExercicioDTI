@@ -40,17 +40,6 @@ namespace Modelo.Infra.Data.Repository
 
                 return ConverterVendasEntitiesParaVendas(vendaEntities);
             }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel encontrar as vendas associadas ao CPF");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
             catch (Exception ex)
             {
                 throw ex;
@@ -66,18 +55,7 @@ namespace Modelo.Infra.Data.Repository
                 //Como o id da venda é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir a venda com esse id
 
                 return ConverterVendaEntityParaVenda(vendaEntities.First<VendaEntity>());
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel encontrar a venda");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+            }           
             catch (Exception ex)
             {
                 throw ex;

@@ -66,18 +66,7 @@ namespace Modelo.Infra.Data.Repository
             {
                 var produtosEntities = await _baseRepository.BuscarTodasEntidadesAsync<ProdutoEntity>(typeof(ProdutoEntity).Name);
                 return ConverteProdutosEntitiesParaProdutos(produtosEntities);
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel obter todos os produtos.");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+            }           
             catch (Exception ex)
             {
                 throw ex;
