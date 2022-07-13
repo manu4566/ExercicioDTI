@@ -41,9 +41,10 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoUsuario> CadastrarUsuario(MensagemAcaoUsuario msgUsuario)
         {
+           
             return new MensagemRetornoAcaoUsuario
             {
-                CadastroRealizado = await _cadastrarUsuarioService.CadastrarUsuario(_converterUsuario.UsuarioDto_Usuario(msgUsuario.Usuario))
+                MensagemRetorno = await _cadastrarUsuarioService.CadastrarUsuario(_converterUsuario.UsuarioDto_Usuario(msgUsuario.Usuario))
             };
         }
 

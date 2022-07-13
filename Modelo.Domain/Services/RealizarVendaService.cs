@@ -13,21 +13,26 @@ namespace Modelo.Domain.Services
             _vendasRepository = vendasRepository;
             _produtoRepository = produtoRepository;
         }
-        public async Task CadastrarVenda(Venda venda)
+        public async Task<string> CadastrarVenda(Venda venda)
         {
             try
             {
+                string msg;
                 var produtosVendaPermitida = await VerificarEstoque(venda.ProdutosVendidos);
 
                 if (produtosVendaPermitida.Count.Equals(venda.ProdutosVendidos.Count))
                 {
                     await AtualizarEstoque(produtosVendaPermitida);
                     await _vendasRepository.InserirVenda(venda);
+                   
+                    msg = "Cadastro realizado com sucesso";
                 }
                 else
                 {
-                    venda.Erro = "Erro: Pelo menos um produto não tem a quantidade solitada no estoque.";
+                    msg = "Erro: Pelo menos um produto não tem a quantidade solitada no estoque.";
                 }
+
+                return msg;
             }
             catch(Exception ex)
             {
@@ -86,7 +91,10 @@ namespace Modelo.Domain.Services
 
                 foreach (var produtoVendido in venda.ProdutosVendidos)
                 {
-                    produtosVendidos.Add(produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First());
+                    var produto = produtosEntity.Where<Produto>(p => p.Id == produtoVendido.Id).First();
+                    produto.Qtd = produtoVendido.QtdVendida;
+
+                    produtosVendidos.Add(produto);
                 }
 
                 return produtosVendidos;
@@ -133,9 +141,9 @@ namespace Modelo.Domain.Services
                 foreach (var produtoVendido in produtosVendidos)
                 {
                     var produtoEstoque = produtosEntity.Where(p => p.Id == produtoVendido.Id).First();
-                    if (produtoEstoque.QtdEstoque >= produtoVendido.QtdVendida)
+                    if (produtoEstoque.Qtd >= produtoVendido.QtdVendida)
                     {
-                        produtoEstoque.QtdEstoque = produtoEstoque.QtdEstoque - produtoVendido.QtdVendida;
+                        produtoEstoque.Qtd = produtoEstoque.Qtd - produtoVendido.QtdVendida;
 
                         produtosVendaPermitida.Add(produtoEstoque);
                     }

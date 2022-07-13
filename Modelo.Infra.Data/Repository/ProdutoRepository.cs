@@ -51,20 +51,9 @@ namespace Modelo.Infra.Data.Repository
         {            
             try 
             {
-               var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);
-               return ConverterProdutoEntityParaProduto(produtoEntity);
-            }
-            catch (HttpRequestException ex)
-            {
-                if (ex.StatusCode.Equals(HttpStatusCode.NotFound))
-                {
-                    throw new Exception("Não foi possivel obter o produto.");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+                var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);          
+                return ConverterProdutoEntityParaProduto(produtoEntity);
+            }         
             catch (Exception ex)
             {
                 throw ex;
@@ -122,20 +111,25 @@ namespace Modelo.Infra.Data.Repository
                 Nome = produto.Nome,
                 Preco = produto.Preco,
                 Descricao = produto.Descricao,
-                QtdEstoque = produto.QtdEstoque
+                QtdEstoque = produto.Qtd
             };
 
         }
 
         private Produto ConverterProdutoEntityParaProduto(ProdutoEntity produtoEntity)
         {
+            if(produtoEntity == null)
+            {
+                return null;
+            }
+
             return new Produto 
             {
                 Id = Guid.Parse(produtoEntity.Id),
                 Nome = produtoEntity.Nome,
                 Preco = produtoEntity.Preco,
                 Descricao = produtoEntity.Descricao,
-                QtdEstoque = produtoEntity.QtdEstoque
+                Qtd = produtoEntity.QtdEstoque
             };
                        
         }

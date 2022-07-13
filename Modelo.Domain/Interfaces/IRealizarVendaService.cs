@@ -9,7 +9,7 @@ namespace Modelo.Domain.Interfaces
 {
     public interface IRealizarVendaService
     {
-        Task CadastrarVenda(Venda venda);
+        Task<string> CadastrarVenda(Venda venda);
         Task<DetalhesVenda> ObterDetalhesDaVenda(Guid id);       
         Task<List<Venda>> ObterTodasVendas(string cpf);
 

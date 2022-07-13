@@ -49,7 +49,7 @@ namespace Modelo.Application.Services
 
             return new MensagemRetornoAcaoVenda
             {
-                CadastroRealizado = await _realizarVendaService.CadastrarVenda(venda)
+                MensagemRetorno = await _realizarVendaService.CadastrarVenda(venda)
             };
         }
 

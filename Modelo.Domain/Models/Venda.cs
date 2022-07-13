@@ -6,7 +6,6 @@ namespace Modelo.Domain.Models
     {
         public Guid Id { get; set; }
         public string Cpf { get; set; }
-        public List<ProdutoVendido> ProdutosVendidos { get; set; }
-        public string Erro { get; set; }
+        public List<ProdutoVendido> ProdutosVendidos { get; set; }      
     }
 }

@@ -21,8 +21,8 @@ namespace Modelo.Application.DTO
         [Required]
         public string Descricao { get; set; }
 
-        [JsonProperty(PropertyName = "qtdEstoque")]
+        [JsonProperty(PropertyName = "qtd")]
         [Required]
-        public int QtdEstoque { get; set; }
+        public int Qtd { get; set; }
     }
 }

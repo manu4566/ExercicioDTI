@@ -9,7 +9,7 @@ namespace Modelo.Domain.Interfaces
 {
     public interface ICadastrarUsuarioService
     {
-        Task CadastrarUsuario(Usuario usuario);
+        Task<string> CadastrarUsuario(Usuario usuario);
         Task<Usuario> BuscarUsuario(string cpf);
 
     }

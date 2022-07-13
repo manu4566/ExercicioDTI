@@ -46,20 +46,27 @@ namespace Modelo.Application.Services
         {
             return new MensagemRetornoAcaoProduto
             {
-                CadastroRealizado = await _cadastrarProdutoService.CadastrarProduto(_converterProduto.ProdutoDto_Produto(msgProduto.Produto))
+                MensagemRetorno = await _cadastrarProdutoService.CadastrarProduto(_converterProduto.ProdutoDto_Produto(msgProduto.Produto))
             };
         }
 
         private async Task<MensagemRetornoAcaoProduto> BuscarProduto(MensagemAcaoProduto msgProduto)
-        {      
+        {
+            string mensagemRetorno = null;
+           
+            var produto = _converterProduto.Produto_ProdutoDto(await _cadastrarProdutoService.ObterProduto(msgProduto.Id));
+            if (produto == null) mensagemRetorno = "Produto não encontrado.";
+
             return new MensagemRetornoAcaoProduto
             {
-                ProdutoDto = _converterProduto.Produto_ProdutoDto(await _cadastrarProdutoService.ObterProduto(msgProduto.Id))
+                MensagemRetorno = mensagemRetorno,
+                ProdutoDto = produto
             };
         }
 
         private async Task<MensagemRetornoAcaoProduto> BuscarTodosProdutos(MensagemAcaoProduto msgProduto)
         {
+
             return new MensagemRetornoAcaoProduto
             {
                 ProdutosDto = _converterProduto.Produtos_ProdutosDto(await _cadastrarProdutoService.ObterTodosProdutos())

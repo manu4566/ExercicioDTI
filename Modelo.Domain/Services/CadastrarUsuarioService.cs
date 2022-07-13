@@ -12,10 +12,12 @@ namespace Modelo.Domain.Services
         {
             _usuarioRepository = usuarioRepository;
         } 
-        public async Task CadastrarUsuario(Usuario usuario)
+        public async Task<string> CadastrarUsuario(Usuario usuario)
         {
             try
             {
+                string msgRetorno;
+
                 if (CpfUteis.VerificarCpf(usuario.Cpf))
                 {
                     var condicaoCpfEmail = await _usuarioRepository.ConferirExistenciaDeCpfEEmail(usuario.Cpf, usuario.Email);
@@ -26,16 +28,19 @@ namespace Modelo.Domain.Services
 
                         await _usuarioRepository.InserirUsuario(usuario);
 
+                        msgRetorno = " Cadastro Realizado com Sucesso.";
                     }
                     else
                     {
-                        usuario.Erro = "Erro: CPF ou Email já cadastrados.";
+                        msgRetorno = "Erro: CPF ou Email já cadastrados.";
                     }
                 }
                 else
                 {
-                    usuario.Erro = "Erro: Cpf não é valido.";
+                    msgRetorno = "Erro: Cpf não é valido.";
                 }
+
+                return msgRetorno;
 
             }
             catch(Exception ex)

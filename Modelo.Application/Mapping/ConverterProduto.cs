@@ -19,13 +19,15 @@ namespace Modelo.Application.Mapping
 
         public ProdutoDto Produto_ProdutoDto(Produto produto)
         {
+            if(produto == null) { return null; }
+
             return new ProdutoDto
             {
                 Id = produto.Id,
                 Descricao = produto.Descricao,
                 Nome = produto.Nome,
                 Preco = produto.Preco,
-                QtdEstoque = produto.QtdEstoque
+                Qtd = produto.Qtd
 
             };
         }
@@ -38,7 +40,7 @@ namespace Modelo.Application.Mapping
                 Descricao = produtoDto.Descricao,
                 Nome = produtoDto.Nome,
                 Preco = produtoDto.Preco,
-                QtdEstoque = produtoDto.QtdEstoque
+                Qtd = produtoDto.Qtd
 
             };
         }

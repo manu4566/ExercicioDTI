@@ -5,8 +5,8 @@ namespace Modelo.Application.DTO
 {
     public class MensagemRetornoAcaoUsuario
     {
-        [JsonProperty("cadastroRealizado")]
-        public bool CadastroRealizado { get; set; }
+        [JsonProperty("mensagemRetorno")]
+        public string MensagemRetorno { get; set; }
 
         [JsonProperty("usuario")]
         public UsuarioDto UsuarioDto { get; set; }
