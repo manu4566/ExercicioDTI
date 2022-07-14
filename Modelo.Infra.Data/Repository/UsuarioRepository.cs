@@ -61,8 +61,13 @@ namespace Modelo.Infra.Data.Repository
             {
                 var usuariosEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<UsuarioEntity>(cpf, typeof(UsuarioEntity).Name);
                 //Como o CPF do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse email
+               
+                if(usuariosEntities.Any())
+                {
+                    return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+                }
 
-                return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+                return null;              
             }            
             catch (Exception ex)
             {
@@ -77,8 +82,12 @@ namespace Modelo.Infra.Data.Repository
             {
                 var usuariosEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<UsuarioEntity>(email, typeof(UsuarioEntity).Name);
                 //Como o email do usuário é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir o usuario com esse cpf
-
-                return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+                if (usuariosEntities.Any())
+                {
+                    return ConverterUsuarioEntityParaUsuario(usuariosEntities.First<UsuarioEntity>());
+                }
+                
+                return null;
             }            
             catch (Exception ex)
             {

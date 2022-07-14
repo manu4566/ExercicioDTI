@@ -55,10 +55,22 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoVenda> ObterDetalhesVenda(MensagemAcaoVenda msgAcaoVenda)
         {
-            return new MensagemRetornoAcaoVenda
+            var retorno = new MensagemRetornoAcaoVenda();
+            var detalhesDaVenda = await _realizarVendaService.ObterDetalhesDaVenda(msgAcaoVenda.Id);
+            if(detalhesDaVenda != null)
             {
-                DetalhesDaVendaDto = _converterVenda.DetalhesVenda_DetalhesVendaDto( await _realizarVendaService.ObterDetalhesDaVenda(msgAcaoVenda.Id))
-            };
+               retorno.DetalhesDaVendaDto = _converterVenda.DetalhesVenda_DetalhesVendaDto(detalhesDaVenda);
+               retorno.MensagemRetorno = "Venda encontrada.";
+            }
+            else
+            {
+               retorno.MensagemRetorno = "Venda não encontrada.";
+            }
+
+            return retorno;
+            
+                
+            
         }
 
         private async Task<MensagemRetornoAcaoVenda> ObterTodasVendas(MensagemAcaoVenda msgAcaoVenda)

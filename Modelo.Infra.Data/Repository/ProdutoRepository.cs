@@ -51,8 +51,10 @@ namespace Modelo.Infra.Data.Repository
         {            
             try 
             {
-                var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);          
-                return ConverterProdutoEntityParaProduto(produtoEntity);
+                var produtoEntity = await _baseRepository.BuscarEntidade<ProdutoEntity>(typeof(ProdutoEntity).Name, id, typeof(ProdutoEntity).Name);
+                if (produtoEntity != null) 
+                    return ConverterProdutoEntityParaProduto(produtoEntity);
+                return null;
             }         
             catch (Exception ex)
             {
@@ -107,10 +109,6 @@ namespace Modelo.Infra.Data.Repository
 
         private Produto ConverterProdutoEntityParaProduto(ProdutoEntity produtoEntity)
         {
-            if(produtoEntity == null)
-            {
-                return null;
-            }
 
             return new Produto 
             {

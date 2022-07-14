@@ -19,7 +19,8 @@ namespace Modelo.Application.Mapping
 
         public ProdutoDto Produto_ProdutoDto(Produto produto)
         {
-            if(produto == null) { return null; }
+            if(produto == null) 
+              return null; 
 
             return new ProdutoDto
             {

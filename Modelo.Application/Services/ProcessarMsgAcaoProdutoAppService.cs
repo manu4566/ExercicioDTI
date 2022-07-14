@@ -52,16 +52,21 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoProduto> BuscarProduto(MensagemAcaoProduto msgProduto)
         {
-            string mensagemRetorno = null;
-           
-            var produto = _converterProduto.Produto_ProdutoDto(await _cadastrarProdutoService.ObterProduto(msgProduto.Id));
-            if (produto == null) mensagemRetorno = "Produto não encontrado.";
+            var retorno = new MensagemRetornoAcaoProduto();           
 
-            return new MensagemRetornoAcaoProduto
+            var produto = await _cadastrarProdutoService.ObterProduto(msgProduto.Id);          
+            
+            if (produto == null)
             {
-                MensagemRetorno = mensagemRetorno,
-                ProdutoDto = produto
-            };
+                retorno.MensagemRetorno = "Produto não encontrado.";                
+            }               
+            else
+            {
+                retorno.MensagemRetorno = "Produto encontrado.";
+                retorno.ProdutosDto.Add(_converterProduto.Produto_ProdutoDto(produto));
+            }
+
+            return retorno;
         }
 
         private async Task<MensagemRetornoAcaoProduto> BuscarTodosProdutos(MensagemAcaoProduto msgProduto)
@@ -69,6 +74,7 @@ namespace Modelo.Application.Services
 
             return new MensagemRetornoAcaoProduto
             {
+                MensagemRetorno = "Busca Efetuada",
                 ProdutosDto = _converterProduto.Produtos_ProdutosDto(await _cadastrarProdutoService.ObterTodosProdutos())
             };
         }

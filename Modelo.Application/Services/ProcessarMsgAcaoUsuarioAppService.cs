@@ -40,8 +40,8 @@ namespace Modelo.Application.Services
         }
 
         private async Task<MensagemRetornoAcaoUsuario> CadastrarUsuario(MensagemAcaoUsuario msgUsuario)
-        {
-           
+        {           
+
             return new MensagemRetornoAcaoUsuario
             {
                 MensagemRetorno = await _cadastrarUsuarioService.CadastrarUsuario(_converterUsuario.UsuarioDto_Usuario(msgUsuario.Usuario))
@@ -50,13 +50,21 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoUsuario> BuscarUsuario(MensagemAcaoUsuario msgUsuario)
         {
+            var retorno = new MensagemRetornoAcaoUsuario();
             var cpf = CpfUteis.PadronizarCpf(msgUsuario.Cpf);
 
-            return new MensagemRetornoAcaoUsuario
+            var usuario = await _cadastrarUsuarioService.BuscarUsuario(cpf);
+
+            if (usuario == null)
             {
-                
-                UsuarioDto = _converterUsuario.Usuario_UsuarioDto( await _cadastrarUsuarioService.BuscarUsuario(cpf))
-            };
+                retorno.MensagemRetorno = "Usuario não encontrado.";
+            }
+            else
+            {
+                retorno.MensagemRetorno = "Usuario encontrado.";
+                retorno.UsuarioDto = _converterUsuario.Usuario_UsuarioDto(usuario);
+            }
+            return retorno;
         }
 
 
