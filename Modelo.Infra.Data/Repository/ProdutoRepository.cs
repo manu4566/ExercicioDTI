@@ -67,7 +67,11 @@ namespace Modelo.Infra.Data.Repository
             try
             {
                 var produtosEntities = await _baseRepository.BuscarTodasEntidadesAsync<ProdutoEntity>(typeof(ProdutoEntity).Name);
-                return ConverteProdutosEntitiesParaProdutos(produtosEntities);
+                if (produtosEntities.Any())
+                {
+                    return ConverteProdutosEntitiesParaProdutos(produtosEntities);
+                }
+                return null;
             }           
             catch (Exception ex)
             {

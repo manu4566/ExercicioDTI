@@ -25,13 +25,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Infra.Data", "Modelo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Infra.CrossCutting", "Modelo.Infra.CrossCutting\Modelo.Infra.CrossCutting.csproj", "{F2169A15-0C9D-4D06-AFB5-1EF837BB053C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modelo.Host.Test", "Modelo.Host.Test\Modelo.Host.Test.csproj", "{B9A4E9EC-B6E8-42EE-8046-92F92E40F746}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Host.Test", "Modelo.Host.Test\Modelo.Host.Test.csproj", "{B9A4E9EC-B6E8-42EE-8046-92F92E40F746}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modelo.Infra.Data.Test", "Modelo.Infra.Data.Test\Modelo.Infra.Data.Test.csproj", "{B0E6C676-4224-4E02-9D72-F54D4A74CB54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Infra.Data.Test", "Modelo.Infra.Data.Test\Modelo.Infra.Data.Test.csproj", "{B0E6C676-4224-4E02-9D72-F54D4A74CB54}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{1BA9E148-62F0-4BC6-9FDC-BAC32DF7D458}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{18767A86-631C-4507-8A45-5EFA9A0FC5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Utilities", "Utilities\Modelo.Utilities.csproj", "{18767A86-631C-4507-8A45-5EFA9A0FC5EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Share", "Share", "{ACB384CF-8189-43F2-B5AF-D171B5B622B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

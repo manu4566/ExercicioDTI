@@ -38,7 +38,12 @@ namespace Modelo.Infra.Data.Repository
             {
                 var vendaEntities = await _baseRepository.BuscarTodasEntidadesPartitionKeyAsync<VendaEntity>(cpf, typeof(VendaEntity).Name);
 
-                return ConverterVendasEntitiesParaVendas(vendaEntities);
+                if (vendaEntities.Any())
+                {
+                    return ConverterVendasEntitiesParaVendas(vendaEntities);
+                }
+
+                return null;
             }
             catch (Exception ex)
             {
@@ -54,7 +59,13 @@ namespace Modelo.Infra.Data.Repository
                 var vendaEntities = await _baseRepository.BuscarTodasEntidadesRowKeyAsync<VendaEntity>(id, typeof(VendaEntity).Name);
                 //Como o id da venda é unico, apesar de retornar uma lista, ela é de tamanho unitario ou nula, se não existir a venda com esse id
 
-                return ConverterVendaEntityParaVenda(vendaEntities.First<VendaEntity>());
+                if (vendaEntities.Any())
+                {
+                    return ConverterVendaEntityParaVenda(vendaEntities.First<VendaEntity>());
+                }
+
+                return null;
+                
             }           
             catch (Exception ex)
             {
