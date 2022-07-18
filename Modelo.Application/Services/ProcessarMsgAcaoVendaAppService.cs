@@ -3,6 +3,7 @@ using Modelo.Application.Interfaces;
 using Modelo.Application.Mapping;
 using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
+using Modelo.Share;
 using System;
 
 namespace Modelo.Application.Services
@@ -45,7 +46,7 @@ namespace Modelo.Application.Services
 
         private async Task<MensagemRetornoAcaoVenda> CadastrarVenda(MensagemAcaoVenda msgAcaoVenda)
         {
-            var venda = _converterVenda.VendaDto_Venda(msgAcaoVenda.Venda);
+            var venda = _converterVenda.VendaDtoParaVenda(msgAcaoVenda.Venda);
 
             return new MensagemRetornoAcaoVenda
             {
@@ -61,12 +62,12 @@ namespace Modelo.Application.Services
 
             if(detalhesDaVenda != null)
             {
-               retorno.DetalhesDaVendaDto = _converterVenda.DetalhesVenda_DetalhesVendaDto(detalhesDaVenda);
-               retorno.MensagemRetorno = "Venda encontrada.";
+               retorno.DetalhesDaVendaDto = _converterVenda.DetalhesVendaParaDetalhesVendaDto(detalhesDaVenda);
+               retorno.MensagemRetorno = AppConstantes.Api.Sucesso.Busca;
             }
             else
             {
-               retorno.MensagemRetorno = "Venda não encontrada.";
+               retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;
             }
 
             return retorno;
@@ -83,12 +84,12 @@ namespace Modelo.Application.Services
 
             if(venda != null)
             {
-                retorno.VendasDto = _converterVenda.Venda_VendaDto(venda);
-                retorno.MensagemRetorno = "Vendas encontradas.";
+                retorno.VendasDto = _converterVenda.VendasParaVendasDto(venda);
+                retorno.MensagemRetorno = AppConstantes.Api.Sucesso.Busca;
             }
             else
             {
-                retorno.MensagemRetorno = "Vendas não encontradas.";
+                retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;
             }
 
             return retorno;

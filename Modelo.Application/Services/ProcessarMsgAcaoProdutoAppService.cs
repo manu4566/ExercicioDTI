@@ -1,6 +1,7 @@
 ﻿using Modelo.Application.DTO;
 using Modelo.Application.Interfaces;
 using Modelo.Domain.Interfaces;
+using Modelo.Share;
 using System;
 
 
@@ -46,24 +47,27 @@ namespace Modelo.Application.Services
         {
             return new MensagemRetornoAcaoProduto
             {
-                MensagemRetorno = await _cadastrarProdutoService.CadastrarProduto(_converterProduto.ProdutoDto_Produto(msgProduto.Produto))
+                MensagemRetorno = await _cadastrarProdutoService.CadastrarProduto(_converterProduto.ProdutoDtoParaProduto(msgProduto.Produto))
             };
         }
 
         private async Task<MensagemRetornoAcaoProduto> BuscarProduto(MensagemAcaoProduto msgProduto)
         {
-            var retorno = new MensagemRetornoAcaoProduto();           
+            var retorno = new MensagemRetornoAcaoProduto();
+            var produtos = new List<ProdutoDto>();
 
             var produto = await _cadastrarProdutoService.ObterProduto(msgProduto.Id);          
             
             if (produto == null)
             {
-                retorno.MensagemRetorno = "Produto não encontrado.";                
+                retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;                
             }               
             else
-            {
-                retorno.MensagemRetorno = "Produto encontrado.";
-                retorno.ProdutosDto.Add(_converterProduto.Produto_ProdutoDto(produto));
+            {              
+                produtos.Add(_converterProduto.ProdutoParaProdutoDto(produto));
+
+                retorno.MensagemRetorno = AppConstantes.Api.Sucesso.Busca;
+                retorno.ProdutosDto = produtos;
             }
 
             return retorno;
@@ -74,8 +78,8 @@ namespace Modelo.Application.Services
 
             return new MensagemRetornoAcaoProduto
             {
-                MensagemRetorno = "Busca Efetuada",
-                ProdutosDto = _converterProduto.Produtos_ProdutosDto(await _cadastrarProdutoService.ObterTodosProdutos())
+                MensagemRetorno = AppConstantes.Api.Sucesso.Busca,
+                ProdutosDto = _converterProduto.ProdutosParaProdutosDto(await _cadastrarProdutoService.ObterTodosProdutos())
             };
         }
 

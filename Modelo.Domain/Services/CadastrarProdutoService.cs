@@ -1,5 +1,6 @@
 ﻿using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
+using Modelo.Share;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Modelo.Domain.Services
             {                
                 await _produtoRepository.InserirProduto(produto);
 
-                return new string("Cadastro realizado com sucesso.");
+                return AppConstantes.Api.Sucesso.Cadastro;
             }
             catch(Exception ex)
             {

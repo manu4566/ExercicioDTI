@@ -12,7 +12,7 @@ namespace Modelo.Application.Mapping
             _converterProduto = converterProduto;
         }
 
-        public  Venda VendaDto_Venda(VendaDto vendaDto)
+        public  Venda VendaDtoParaVenda(VendaDto vendaDto)
         {
             return new Venda
             {
@@ -22,47 +22,42 @@ namespace Modelo.Application.Mapping
 
             };
         }
-        public  List<ProdutoVendido> ProdutosVendidosDto_ProdutosVendidos(List<ProdutoVendidoDto> produtosVendidosDto)
-        {
-            var produtosVendidos = new List<ProdutoVendido>();
 
-            foreach (var produtoVendidoDto in produtosVendidosDto)
-            {
-                produtosVendidos.Add(ProdutoVendidoDto_ProdutoVendido(produtoVendidoDto));
-            }
-            return produtosVendidos;
-        }       
-        public  ProdutoVendido ProdutoVendidoDto_ProdutoVendido(ProdutoVendidoDto produtoVendidoDto)
+        public DetalhesVendaDto DetalhesVendaParaDetalhesVendaDto(DetalhesVenda detalhesDaVenda)
         {
-            return new ProdutoVendido
+            return new DetalhesVendaDto
             {
-                Id = produtoVendidoDto.Id,
-                QtdVendida = produtoVendidoDto.QtdVendida
+                Id = detalhesDaVenda.Id,
+                Cpf = detalhesDaVenda.Cpf,
+                ValorTotal = detalhesDaVenda.ValorTotal,
+                ProdutoVendidosDto = _converterProduto.ProdutosParaProdutosDto(detalhesDaVenda.ProdutosVendidos)
 
             };
         }
-        
-        public  List<VendaDto> Venda_VendaDto(List<Venda> vendas)
+
+        public  List<VendaDto> VendasParaVendasDto(List<Venda> vendas)
         {
             var vendasDto = new List<VendaDto>();
            
             foreach (var venda in vendas)
             {
-                vendasDto.Add(Venda_VendaDto(venda));
+                vendasDto.Add(VendaParaVendaDto(venda));
             }
 
             return vendasDto;
         }
-        public  VendaDto Venda_VendaDto(Venda venda)
+       
+        private  VendaDto VendaParaVendaDto(Venda venda)
         {
             return new VendaDto
-            {                
+            {
+                Id = venda.Id.ToString(),
                 ProdutosVendidos = ProdutosVendidos_ProdutosVendidosDto(venda.ProdutosVendidos),
                 Cpf = venda.Cpf
 
             };
         }
-        public  List<ProdutoVendidoDto> ProdutosVendidos_ProdutosVendidosDto(List<ProdutoVendido> produtosVendidos)
+        private  List<ProdutoVendidoDto> ProdutosVendidos_ProdutosVendidosDto(List<ProdutoVendido> produtosVendidos)
         {
             var produtosVendidosDto = new List<ProdutoVendidoDto>();
 
@@ -72,7 +67,8 @@ namespace Modelo.Application.Mapping
             }
             return produtosVendidosDto;
         }
-        public  ProdutoVendidoDto ProdutoVendido_ProdutoVendidoDto(ProdutoVendido produtoVendido)
+
+        private  ProdutoVendidoDto ProdutoVendido_ProdutoVendidoDto(ProdutoVendido produtoVendido)
         {
             return new ProdutoVendidoDto
             {
@@ -80,20 +76,28 @@ namespace Modelo.Application.Mapping
                 QtdVendida = produtoVendido.QtdVendida
 
             };
+        }      
+
+        private List<ProdutoVendido> ProdutosVendidosDto_ProdutosVendidos(List<ProdutoVendidoDto> produtosVendidosDto)
+        {
+            var produtosVendidos = new List<ProdutoVendido>();
+
+            foreach (var produtoVendidoDto in produtosVendidosDto)
+            {
+                produtosVendidos.Add(ProdutoVendidoDto_ProdutoVendido(produtoVendidoDto));
+            }
+            return produtosVendidos;
         }
 
-        public  DetalhesVendaDto DetalhesVenda_DetalhesVendaDto(DetalhesVenda detalhesDaVenda)
+        private ProdutoVendido ProdutoVendidoDto_ProdutoVendido(ProdutoVendidoDto produtoVendidoDto)
         {
-            return new DetalhesVendaDto
+            return new ProdutoVendido
             {
-                Id = detalhesDaVenda.Id,
-                Cpf = detalhesDaVenda.Cpf,
-                ValorTotal = detalhesDaVenda.ValorTotal,
-                ProdutoVendidosDto = _converterProduto.Produtos_ProdutosDto(detalhesDaVenda.ProdutosVendidos)
+                Id = produtoVendidoDto.Id,
+                QtdVendida = produtoVendidoDto.QtdVendida
 
             };
         }
-       
 
     }
 }

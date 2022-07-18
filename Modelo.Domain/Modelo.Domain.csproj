@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modelo.Share\Modelo.Shared.csproj" />
     <ProjectReference Include="..\Utilities\Modelo.Utilities.csproj" />
   </ItemGroup>
 

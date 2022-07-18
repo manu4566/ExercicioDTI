@@ -6,18 +6,18 @@ namespace Modelo.Application.Mapping
 {
     public class ConverterProduto : IConverterProduto
     {
-        public List<ProdutoDto> Produtos_ProdutosDto(List<Produto> produtos)
+        public List<ProdutoDto> ProdutosParaProdutosDto(List<Produto> produtos)
         {
             var produtosDto = new List<ProdutoDto>();
 
             foreach (var produto in produtos)
             {
-                produtosDto.Add(Produto_ProdutoDto(produto));
+                produtosDto.Add(ProdutoParaProdutoDto(produto));
             }
             return produtosDto;
         }
 
-        public ProdutoDto Produto_ProdutoDto(Produto produto)
+        public ProdutoDto ProdutoParaProdutoDto(Produto produto)
         {           
 
             return new ProdutoDto
@@ -31,7 +31,7 @@ namespace Modelo.Application.Mapping
             };
         }
 
-        public Produto ProdutoDto_Produto(ProdutoDto produtoDto)
+        public Produto ProdutoDtoParaProduto(ProdutoDto produtoDto)
         {
             return new Produto
             {

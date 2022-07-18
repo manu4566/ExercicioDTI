@@ -1,5 +1,6 @@
 ﻿using Modelo.Domain.Interfaces;
 using Modelo.Domain.Models;
+using Modelo.Share;
 
 namespace Modelo.Domain.Services
 {
@@ -25,11 +26,11 @@ namespace Modelo.Domain.Services
                     await AtualizarEstoque(produtosVendaPermitida);
                     await _vendasRepository.InserirVenda(venda);
                    
-                    msg = "Cadastro realizado com sucesso";
+                    msg = AppConstantes.Api.Sucesso.Cadastro;
                 }
                 else
                 {
-                    msg = "Erro: Pelo menos um produto não tem a quantidade solitada no estoque.";
+                    msg = AppConstantes.Api.Erros.Venda.EstoqueInsuficiente;
                 }
 
                 return msg;

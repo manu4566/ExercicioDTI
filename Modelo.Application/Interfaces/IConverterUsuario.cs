@@ -6,8 +6,8 @@ namespace Modelo.Application.Interfaces
 {
     public interface IConverterUsuario
     {
-        public Usuario UsuarioDto_Usuario(UsuarioDto usuarioDto);
-        public UsuarioDto Usuario_UsuarioDto(Usuario usuario);
+        public Usuario UsuarioDtoParaUsuario(UsuarioDto usuarioDto);
+        public UsuarioDto UsuarioParaUsuarioDto(Usuario usuario);
 
     }
 }

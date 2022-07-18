@@ -9,7 +9,6 @@ namespace Modelo.Application.DTO
         public string MensagemRetorno { get; set; }
 
         [JsonProperty("produtos")]
-        public List<ProdutoDto> ProdutosDto { get; set; } = new List<ProdutoDto>();
-   
+        public List<ProdutoDto> ProdutosDto { get; set; }
     }
 }

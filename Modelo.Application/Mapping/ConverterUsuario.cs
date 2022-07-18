@@ -6,7 +6,7 @@ namespace Modelo.Application.Mapping
 {
     public class ConverterUsuario : IConverterUsuario
     {
-        public Usuario UsuarioDto_Usuario(UsuarioDto usuarioDto)
+        public Usuario UsuarioDtoParaUsuario(UsuarioDto usuarioDto)
         {
             return new Usuario
             {
@@ -18,7 +18,7 @@ namespace Modelo.Application.Mapping
             };
         }
 
-        public UsuarioDto Usuario_UsuarioDto(Usuario usuario)
+        public UsuarioDto UsuarioParaUsuarioDto(Usuario usuario)
         {
             return new UsuarioDto
             {

@@ -15,8 +15,6 @@ namespace Modelo.Application.DTO
 
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
-
-        [JsonProperty(PropertyName = "erro")]
-        public string Erro { get; set; }
+       
     }
 }

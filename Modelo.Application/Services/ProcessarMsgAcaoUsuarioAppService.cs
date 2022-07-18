@@ -4,6 +4,7 @@ using Modelo.Application.DTO;
 using Modelo.Application.Interfaces;
 using Modelo.Domain.Interfaces;
 using Modelo.Domain.Validators;
+using Modelo.Share;
 
 namespace Modelo.Application.Services
 {
@@ -44,7 +45,7 @@ namespace Modelo.Application.Services
 
             return new MensagemRetornoAcaoUsuario
             {
-                MensagemRetorno = await _cadastrarUsuarioService.CadastrarUsuario(_converterUsuario.UsuarioDto_Usuario(msgUsuario.Usuario))
+                MensagemRetorno = await _cadastrarUsuarioService.CadastrarUsuario(_converterUsuario.UsuarioDtoParaUsuario(msgUsuario.Usuario))
             };
         }
 
@@ -57,12 +58,12 @@ namespace Modelo.Application.Services
 
             if (usuario == null)
             {
-                retorno.MensagemRetorno = "Usuario não encontrado.";
+                retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;
             }
             else
             {
-                retorno.MensagemRetorno = "Usuario encontrado.";
-                retorno.UsuarioDto = _converterUsuario.Usuario_UsuarioDto(usuario);
+                retorno.MensagemRetorno = AppConstantes.Api.Sucesso.Busca;
+                retorno.UsuarioDto = _converterUsuario.UsuarioParaUsuarioDto(usuario);
             }
             return retorno;
         }

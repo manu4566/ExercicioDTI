@@ -2,6 +2,7 @@
 using Modelo.Domain.Models;
 using System;
 using Modelo.Domain.Validators;
+using Modelo.Share;
 
 namespace Modelo.Domain.Services
 {
@@ -28,16 +29,16 @@ namespace Modelo.Domain.Services
 
                         await _usuarioRepository.InserirUsuario(usuario);
 
-                        msgRetorno = " Cadastro Realizado com Sucesso.";
+                        msgRetorno = AppConstantes.Api.Sucesso.Cadastro;
                     }
                     else
                     {
-                        msgRetorno = "Erro: CPF ou Email já cadastrados.";
+                        msgRetorno = AppConstantes.Api.Erros.Usuario.DadosInvalidos;
                     }
                 }
                 else
                 {
-                    msgRetorno = "Erro: Cpf não é valido.";
+                    msgRetorno = AppConstantes.Api.Erros.Usuario.CpfInvalido;
                 }
 
                 return msgRetorno;
