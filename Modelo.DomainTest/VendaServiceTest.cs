@@ -27,21 +27,15 @@ namespace Modelo.Domain.UnitTests
         [Test]
         public void CadastraVendaQuandoHaProdutosDisponiveisNoEstoqueERetornaMensagemDeSucesso()
         {
-            var produto = new Produto
-            {
-                Descricao = "descricao",             
-                Nome = "nome",
-                Preco = 10,
-                Id = Guid.Empty,
-                Qtd = 10
+            var produto = _fixture.Build<Produto>()
+                .With(produto => produto.Id, Guid.Empty)
+                .With(produto => produto.Qtd, 10)                
+                .Create();         
 
-            };
-
-            var produtoVendido = new ProdutoVendido
-            {               
-                Id = Guid.Empty,                
-                QtdVendida = 10
-            };
+            var produtoVendido = _fixture.Build<ProdutoVendido>()
+                .With(produto => produto.Id, Guid.Empty)
+                .With(produto => produto.QtdVendida, 10)
+                .Create();
 
             var produtosEntity = new List<Produto>();
             produtosEntity.Add(produto);
@@ -77,21 +71,15 @@ namespace Modelo.Domain.UnitTests
         [Test]
         public void CadastraVendaQuandoNaoHaProdutosDisponiveisNoEstoqueERetornaMensagemDeEstoqueInsuficiente()
         {
-            var produto = new Produto
-            {
-                Descricao = "descricao",
-                Nome = "nome",
-                Preco = 10,
-                Id = Guid.Empty,
-                Qtd = 10
+            var produto = _fixture.Build<Produto>()
+             .With(produto => produto.Id, Guid.Empty)
+             .With(produto => produto.Qtd, 10)
+             .Create();
 
-            };
-
-            var produtoVendido = new ProdutoVendido
-            {
-                Id = Guid.Empty,
-                QtdVendida = 15
-            };
+            var produtoVendido = _fixture.Build<ProdutoVendido>()
+                .With(produto => produto.Id, Guid.Empty)
+                .With(produto => produto.QtdVendida, 15)
+                .Create();
 
             var produtosEntity = new List<Produto>();
             produtosEntity.Add(produto);
@@ -105,19 +93,22 @@ namespace Modelo.Domain.UnitTests
 
             _produtoRepository
               .Setup(mock => mock.ObterTodosProdutos())
-              .ReturnsAsync(produtosEntity);        
+              .ReturnsAsync(produtosEntity)
+              .Verifiable();        
 
             var appService = InstanciarVendaService();
 
             var retorno = appService.CadastrarVenda(venda);
 
             retorno.Result.Should().Be(AppConstantes.Api.Erros.Venda.EstoqueInsuficiente);
+            _produtoRepository.Verify(mock => mock.ObterTodosProdutos(), Times.Once);
         }
 
         [Test]
         public void BuscaTodasAsVendasAssociadasAoCpfDoClienteERetornaListaDeVendas()
         {
             var vendas = _fixture.CreateMany<Venda>().ToList();
+            
             _vendasRepository
               .Setup(mock => mock.ObterTodasVendas(It.IsAny<string>()))
               .ReturnsAsync(vendas);
@@ -145,23 +136,29 @@ namespace Modelo.Domain.UnitTests
         [Test]
         public void BuscaDetalhesDaVendaComIdRegistradoERetornaDetalhesDaVenda()
         {
-            var produto = new Produto
-            {
-                Descricao = "descricao",
-                Nome = "nome",
-                Preco = 10,
-                Id = Guid.Empty,
-                Qtd = 10
+            var produto = _fixture.Build<Produto>()
+           .With(produto => produto.Id, Guid.Empty)
+           .With(produto => produto.Nome, "nome")
+           .With(produto => produto.Descricao, "descricao")
+           .With(produto => produto.Qtd, 10)
+           .With(produto => produto.Preco, 10)
+           .Create();
 
-            };
+            var produtoVendido = _fixture.Build<ProdutoVendido>()
+                .With(produto => produto.Id, Guid.Empty)
+                .With(produto => produto.QtdVendida, 1)                
+                .Create();
 
-            var produtoVendido = new ProdutoVendido
-            {
-                Id = Guid.Empty,
-                QtdVendida = 1
-            };
 
-            var detalheProdutoVendido = new Produto
+            var detalheProdutoVendido = _fixture.Build<Produto>()
+           .With(produto => produto.Id, Guid.Empty)
+           .With(produto => produto.Nome, "nome")
+           .With(produto => produto.Descricao, "descricao")
+           .With(produto => produto.Qtd, 1)
+           .With(produto => produto.Preco, 10)
+           .Create();
+
+            new Produto
             {
                 Descricao = "descricao",
                 Nome = "nome",
@@ -169,6 +166,8 @@ namespace Modelo.Domain.UnitTests
                 Id = Guid.Empty,
                 Qtd = 1
             };
+
+            var valorTotal = detalheProdutoVendido.Qtd * detalheProdutoVendido.Preco;
 
             var produtosEntity = new List<Produto>();
             produtosEntity.Add(produto);
@@ -198,14 +197,13 @@ namespace Modelo.Domain.UnitTests
 
             retorno.Result.Id.Should().Be(venda.Id);
             retorno.Result.Cpf.Should().Be(venda.Cpf);
-            retorno.Result.ValorTotal.Should().Be(10);
+            retorno.Result.ValorTotal.Should().Be(valorTotal);
 
-           // retorno.Result.ProdutosVendidos[0].Should().Be(detalhesProdutosVendidos[0]);
-           retorno.Result.ProdutosVendidos[0].Id.Should().Be(detalhesProdutosVendidos[0].Id);
-           retorno.Result.ProdutosVendidos[0].Descricao.Should().Be(detalhesProdutosVendidos[0].Descricao);
-           retorno.Result.ProdutosVendidos[0].Qtd.Should().Be(detalhesProdutosVendidos[0].Qtd);
-           retorno.Result.ProdutosVendidos[0].Preco.Should().Be(detalhesProdutosVendidos[0].Preco);
-           retorno.Result.ProdutosVendidos[0].Nome.Should().Be(detalhesProdutosVendidos[0].Nome);
+            retorno.Result.ProdutosVendidos[0].Id.Should().Be(detalhesProdutosVendidos[0].Id);
+            retorno.Result.ProdutosVendidos[0].Descricao.Should().Be(detalhesProdutosVendidos[0].Descricao);
+            retorno.Result.ProdutosVendidos[0].Qtd.Should().Be(detalhesProdutosVendidos[0].Qtd);
+            retorno.Result.ProdutosVendidos[0].Preco.Should().Be(detalhesProdutosVendidos[0].Preco);
+            retorno.Result.ProdutosVendidos[0].Nome.Should().Be(detalhesProdutosVendidos[0].Nome);
 
         }
 

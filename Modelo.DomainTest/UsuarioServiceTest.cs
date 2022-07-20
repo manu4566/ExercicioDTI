@@ -12,70 +12,93 @@ namespace Modelo.Domain.UnitTests
     {
         private IFixture _fixture;
 
-        private Mock<IProdutoRepository> _produtoRepository;
+        private Mock<IUsuarioRepository> _usuarioRepository;
        
         [SetUp]
         public void Setup()
         {
             _fixture = new Fixture();
-            _produtoRepository = new Mock<IProdutoRepository>();
+            _usuarioRepository = new Mock<IUsuarioRepository>();
            
         }
 
         [Test] 
-        public void CadastraProdutoERetornaMensagemDeSucesso()
+        public void CadastraUsuarioComCpfInvalidoERetornaMensagemDeErro()
         {
-            _produtoRepository
-             .Setup(mock => mock.InserirProduto(It.IsAny<Produto>()))
-             .Verifiable();          
+            var usuario = _fixture.Build<Usuario>()
+                .With(usuario => usuario.Cpf, "70000000000")
+                .Create();
 
-            var appService = InstanciarProdutoService();
+            var appService = InstanciarUsuarioService();
 
-            var retorno = appService.CadastrarProduto(_fixture.Create<Produto>());
+            var retorno = appService.CadastrarUsuario(usuario);
 
-            retorno.Result.Should().Be( AppConstantes.Api.Sucesso.Cadastro );
-            _produtoRepository.Verify(mock => mock.InserirProduto(It.IsAny<Produto>()), Times.Once);
+            retorno.Result.Should().Be(AppConstantes.Api.Erros.Usuario.CpfInvalido);            
         }
 
         [Test]
-        public void BuscaTodosProdutosERetornaListaDeProdutosRegistrados()
+        public void CadastraUsuarioComCpfValidoEDadosJaRegistradosERetornaMensagemDeErro()
         {
-            var produtos = _fixture.CreateMany<Produto>().ToList(); 
-           
-            _produtoRepository
-             .Setup(mock => mock.ObterTodosProdutos())
-             .ReturnsAsync(produtos);
+            var usuario = _fixture.Build<Usuario>()
+                .With(usuario => usuario.Cpf, "542.208.500-07")
+                .Create();
 
-            var appService = InstanciarProdutoService();
+            _usuarioRepository
+                .Setup(mock => mock.ConferirExistenciaDeCpfEEmail(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
 
-            var retorno = appService.ObterTodosProdutos();
+            var appService = InstanciarUsuarioService();
 
-            Assert.AreEqual(retorno.Result, produtos);
-        
+            var retorno = appService.CadastrarUsuario(usuario);
+
+            retorno.Result.Should().Be(AppConstantes.Api.Erros.Usuario.DadosInvalidos);
         }
 
         [Test]
-        public void BuscaProdutoPorIdERetornaProduto()
+        public void CadastraUsuarioComCpfValidoEDadosNaoRegistradosERetornaMensagemDeSucesso()
         {
-            var produto = _fixture.Create<Produto>();
+            var usuario = _fixture.Build<Usuario>()
+                .With(usuario => usuario.Cpf, "542.208.500-07")
+                .Create();
 
-            _produtoRepository
-             .Setup(mock => mock.ObterProduto(It.IsAny<string>()))
-             .ReturnsAsync(produto);
+            _usuarioRepository
+                .Setup(mock => mock.ConferirExistenciaDeCpfEEmail(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(false);
 
-            var appService = InstanciarProdutoService();
+            _usuarioRepository
+                .Setup(mock => mock.InserirUsuario(It.IsAny<Usuario>()))
+                .Verifiable();
 
-            var retorno = appService.ObterProduto(It.IsAny<string>());
+            var appService = InstanciarUsuarioService();
 
-            Assert.AreEqual(retorno.Result, produto);
+            var retorno = appService.CadastrarUsuario(usuario);
+
+            retorno.Result.Should().Be(AppConstantes.Api.Sucesso.Cadastro);
+            _usuarioRepository.Verify(mock => mock.InserirUsuario(It.IsAny<Usuario>()), Times.Once);
+        }
+
+        [Test]
+        public void BuscaUsuarioPorCpfERetornaUsuario()
+        {
+            var usuario = _fixture.Create<Usuario>();
+
+            _usuarioRepository
+             .Setup(mock => mock.ObterUsuarioPeloCpf(It.IsAny<string>()))
+             .ReturnsAsync(usuario);
+
+            var appService = InstanciarUsuarioService();
+
+            var retorno = appService.BuscarUsuario(It.IsAny<string>());
+
+            Assert.AreEqual(retorno.Result, usuario);
 
         }
 
 
-        private ProdutoService InstanciarProdutoService()
+        private UsuarioService InstanciarUsuarioService()
         {
-            return new ProdutoService(
-                    _produtoRepository.Object                    
+            return new UsuarioService(
+                    _usuarioRepository.Object                    
             );
         }
     }
