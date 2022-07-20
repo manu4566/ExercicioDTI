@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Modelo.Domain.Interfaces
 {
-    public interface IRealizarVendaService
+    public interface IVendaService
     {
         Task<string> CadastrarVenda(Venda venda);
         Task<DetalhesVenda> ObterDetalhesDaVenda(Guid id);       

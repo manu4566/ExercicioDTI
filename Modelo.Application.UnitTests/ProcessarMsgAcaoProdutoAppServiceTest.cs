@@ -15,14 +15,14 @@ namespace Modelo.Application.UnitTests
     {
         private IFixture _fixture;
 
-        private Mock<ICadastrarProdutoService> _cadastrarProdutoService;
+        private Mock<IProdutoService> _cadastrarProdutoService;
         private Mock<IConverterProduto> _converterProduto;
 
        [SetUp] 
         public void Setup()
         {
             _fixture = new Fixture();
-            _cadastrarProdutoService = new Mock<ICadastrarProdutoService>();
+            _cadastrarProdutoService = new Mock<IProdutoService>();
             _converterProduto = new Mock<IConverterProduto>();
         }
 
@@ -85,17 +85,16 @@ namespace Modelo.Application.UnitTests
         }
 
         [Test]
-        public void NaoDeveBuscarProdutoQuandoAcaoForBuscarEIdNaoForRegistradoERetornarMenssagemProdutoNaoEncontrado()
+        public void DeveBuscarProdutoQuandoAcaoForBuscarEIdNaoForRegistradoERetornarMensagemProdutoNaoEncontrado()
         {
             var msgAcao = _fixture.Build<MensagemAcaoProduto>()
                 .With(msg => msg.Acao, AcaoProduto.ObterProduto)
                 .Create();
-            Produto produto = null;           
-            var msgRetorno = AppConstantes.Api.Erros.NaoEncontrado;
+                      
+            var msgRetorno = AppConstantes.Api.Erros.ObjetoNaoEncontrado;
 
             _cadastrarProdutoService
-               .Setup(mock => mock.ObterProduto(msgAcao.Id))
-               .ReturnsAsync(produto)
+               .Setup(mock => mock.ObterProduto(msgAcao.Id))               
                .Verifiable();
 
             var appService = InstanciarProcessarMsgAcaoProdutoAppService();
@@ -119,13 +118,11 @@ namespace Modelo.Application.UnitTests
 
             _cadastrarProdutoService
                .Setup(mock => mock.ObterTodosProdutos())
-               .ReturnsAsync(produtos)
-               .Verifiable();
+               .ReturnsAsync(produtos);
 
             _converterProduto
            .Setup(mock => mock.ProdutosParaProdutosDto(produtos))
-           .Returns(produtosDto)
-           .Verifiable();
+           .Returns(produtosDto);
 
             var appService = InstanciarProcessarMsgAcaoProdutoAppService();
 
@@ -133,8 +130,6 @@ namespace Modelo.Application.UnitTests
 
             Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);
             Assert.AreEqual(produtosDto, retorno.Result.ProdutosDto);
-            _cadastrarProdutoService.Verify(mock => mock.ObterTodosProdutos(), Times.Once);
-            _converterProduto.Verify(mock => mock.ProdutosParaProdutosDto(produtos), Times.Once);
 
         }
 

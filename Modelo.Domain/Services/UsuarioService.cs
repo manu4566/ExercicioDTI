@@ -6,10 +6,10 @@ using Modelo.Share;
 
 namespace Modelo.Domain.Services
 {
-    public class CadastrarUsuarioService : ICadastrarUsuarioService
+    public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        public CadastrarUsuarioService(IUsuarioRepository usuarioRepository)
+        public UsuarioService(IUsuarioRepository usuarioRepository)
         {
             _usuarioRepository = usuarioRepository;
         } 

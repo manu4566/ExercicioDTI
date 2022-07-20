@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Modelo.Domain.Interfaces
 {
-    public interface ICadastrarUsuarioService
+    public interface IUsuarioService
     {
         Task<string> CadastrarUsuario(Usuario usuario);
         Task<Usuario> BuscarUsuario(string cpf);

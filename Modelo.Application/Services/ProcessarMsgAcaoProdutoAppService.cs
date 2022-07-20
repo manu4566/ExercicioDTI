@@ -9,12 +9,12 @@ namespace Modelo.Application.Services
 {
     public class ProcessarMsgAcaoProdutoAppService : IProcessarMsgAcaoProdutoAppService
     {
-        private readonly ICadastrarProdutoService _cadastrarProdutoService;
+        private readonly IProdutoService _cadastrarProdutoService;
 
         private readonly IConverterProduto _converterProduto;
 
         public ProcessarMsgAcaoProdutoAppService(
-            ICadastrarProdutoService cadastrarProdutoService,
+            IProdutoService cadastrarProdutoService,
             IConverterProduto converterProduto)
         {
             _cadastrarProdutoService = cadastrarProdutoService;
@@ -60,7 +60,7 @@ namespace Modelo.Application.Services
             
             if (produto == null)
             {
-                retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;                
+                retorno.MensagemRetorno = AppConstantes.Api.Erros.ObjetoNaoEncontrado;                
             }               
             else
             {              

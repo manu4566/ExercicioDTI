@@ -10,12 +10,12 @@ namespace Modelo.Application.Services
 {
     public class ProcessarMsgAcaoUsuarioAppService : IProcessarMsgAcaoUsuarioAppService
     {
-        private readonly ICadastrarUsuarioService _cadastrarUsuarioService;
+        private readonly IUsuarioService _cadastrarUsuarioService;
 
         private readonly IConverterUsuario _converterUsuario;
 
         public ProcessarMsgAcaoUsuarioAppService(
-            ICadastrarUsuarioService cadastrarUsuarioService,
+            IUsuarioService cadastrarUsuarioService,
             IConverterUsuario converterUsuario)
         {
             _cadastrarUsuarioService = cadastrarUsuarioService;
@@ -58,7 +58,7 @@ namespace Modelo.Application.Services
 
             if (usuario == null)
             {
-                retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;
+                retorno.MensagemRetorno = AppConstantes.Api.Erros.ObjetoNaoEncontrado;
             }
             else
             {

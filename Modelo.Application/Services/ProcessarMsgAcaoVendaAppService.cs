@@ -10,12 +10,12 @@ namespace Modelo.Application.Services
 {
     public class ProcessarMsgAcaoVendaAppService : IProcessarMsgAcaoVendaAppService
     {
-        private readonly IRealizarVendaService _realizarVendaService;
+        private readonly IVendaService _realizarVendaService;
         
         private readonly IConverterVenda _converterVenda;
 
         public ProcessarMsgAcaoVendaAppService( 
-            IRealizarVendaService realizarVendaService,
+            IVendaService realizarVendaService,
             IConverterVenda converterVenda)
         {
             _realizarVendaService = realizarVendaService;
@@ -67,7 +67,7 @@ namespace Modelo.Application.Services
             }
             else
             {
-               retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;
+               retorno.MensagemRetorno = AppConstantes.Api.Erros.ObjetoNaoEncontrado;
             }
 
             return retorno;
@@ -89,7 +89,7 @@ namespace Modelo.Application.Services
             }
             else
             {
-                retorno.MensagemRetorno = AppConstantes.Api.Erros.NaoEncontrado;
+                retorno.MensagemRetorno = AppConstantes.Api.Erros.ObjetoNaoEncontrado;
             }
 
             return retorno;

@@ -6,7 +6,7 @@
         {
             public static class Erros
             {
-                public const string NaoEncontrado = "Objeto não encontrado";
+                public const string ObjetoNaoEncontrado = "Objeto não encontrado";
 
                 public static class Usuario
                 {

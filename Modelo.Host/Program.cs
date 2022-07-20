@@ -21,9 +21,9 @@ namespace Modelo.Host
             builder.Services.AddScoped<IProcessarMsgAcaoUsuarioAppService, ProcessarMsgAcaoUsuarioAppService>();
             builder.Services.AddScoped<IProcessarMsgAcaoVendaAppService, ProcessarMsgAcaoVendaAppService>();
             //Domain
-            builder.Services.AddScoped<ICadastrarProdutoService, CadastrarProdutoService>();
-            builder.Services.AddScoped<ICadastrarUsuarioService, CadastrarUsuarioService>();
-            builder.Services.AddScoped<IRealizarVendaService, RealizarVendaService>();
+            builder.Services.AddScoped<IProdutoService, ProdutoService>();
+            builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+            builder.Services.AddScoped<IVendaService, VendaService>();
             //Infra
             builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();

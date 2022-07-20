@@ -4,12 +4,12 @@ using Modelo.Share;
 
 namespace Modelo.Domain.Services
 {
-    public class RealizarVendaService : IRealizarVendaService
+    public class VendaService : IVendaService
     {
         private readonly IProdutoRepository _produtoRepository;
 
         private readonly IVendaRepository _vendasRepository;
-        public RealizarVendaService(IVendaRepository vendasRepository, IProdutoRepository produtoRepository)
+        public VendaService(IVendaRepository vendasRepository, IProdutoRepository produtoRepository)
         {
             _vendasRepository = vendasRepository;
             _produtoRepository = produtoRepository;

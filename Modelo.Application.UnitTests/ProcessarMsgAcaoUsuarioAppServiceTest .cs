@@ -15,14 +15,14 @@ namespace Modelo.Application.UnitTests
     {
         private IFixture _fixture;
 
-        private Mock<ICadastrarUsuarioService> _cadastrarUsuarioService;
+        private Mock<IUsuarioService> _cadastrarUsuarioService;
         private Mock<IConverterUsuario> _converterUsuario;
 
        [SetUp] 
         public void Setup()
         {
             _fixture = new Fixture();
-            _cadastrarUsuarioService = new Mock<ICadastrarUsuarioService>();
+            _cadastrarUsuarioService = new Mock<IUsuarioService>();
             _converterUsuario = new Mock<IConverterUsuario>();
         }
 
@@ -37,21 +37,17 @@ namespace Modelo.Application.UnitTests
 
             _converterUsuario
              .Setup(mock => mock.UsuarioDtoParaUsuario(msgAcao.Usuario))
-             .Returns(usuario)
-             .Verifiable();
+             .Returns(usuario);
 
             _cadastrarUsuarioService
                 .Setup(mock => mock.CadastrarUsuario(usuario))
-                .ReturnsAsync(msgRetorno)
-                .Verifiable();
+                .ReturnsAsync(msgRetorno);
 
             var appService = InstanciarProcessarMsgAcaoUsuarioAppService();
 
             var retorno = appService.ProcessarMsgAcaoUsuario(msgAcao);
 
-            Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);
-            _cadastrarUsuarioService.Verify(mock => mock.CadastrarUsuario(usuario), Times.Once);
-           _converterUsuario.Verify(mock => mock.UsuarioDtoParaUsuario(msgAcao.Usuario), Times.Once);
+            Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);          
         }
 
         [Test] 
@@ -60,33 +56,29 @@ namespace Modelo.Application.UnitTests
             var msgAcao = _fixture.Build<MensagemAcaoUsuario>()
                 .With(msg => msg.Acao, AcaoUsuario.BuscarUsuario)
                 .With(msg => msg.Cpf, "07335080657")
-                .Create();          
-            var usuario = _fixture.Create<Usuario>();
+                .Create();               
             var usuarioDto = _fixture.Create<UsuarioDto>();
-            var msgRetorno = AppConstantes.Api.Sucesso.Busca;
+            var usuario = _fixture.Create<Usuario>();
 
             _cadastrarUsuarioService
-               .Setup(mock => mock.BuscarUsuario(msgAcao.Cpf))
-               .ReturnsAsync(usuario)
-               .Verifiable();
-
+               .Setup(mock => mock.BuscarUsuario(It.IsAny<string>()))
+               .ReturnsAsync(usuario);
+            //Perguntar ao Italo
             _converterUsuario
-             .Setup(mock => mock.UsuarioParaUsuarioDto(usuario))
-             .Returns(usuarioDto)
-             .Verifiable();           
+             .Setup(mock => mock.UsuarioParaUsuarioDto(It.IsAny<Usuario>()))
+             .Returns(usuarioDto);          
 
             var appService = InstanciarProcessarMsgAcaoUsuarioAppService();
 
             var retorno = appService.ProcessarMsgAcaoUsuario(msgAcao);
 
             Assert.AreEqual(usuarioDto, retorno.Result.UsuarioDto);
-            Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);
-            _cadastrarUsuarioService.Verify(mock => mock.BuscarUsuario(msgAcao.Cpf), Times.Once);
-            _converterUsuario.Verify(mock => mock.UsuarioParaUsuarioDto(usuario), Times.Once);
+            Assert.AreEqual(AppConstantes.Api.Sucesso.Busca, retorno.Result.MensagemRetorno);
+            
         }
 
         [Test]
-        public void DeveBuscarUsuarioQuandoAcaoForBuscarECpfComPontoETracoForRegistradoERetornarUsuarioPreenchidoComSucesso()
+        public void BuscarUsuarioQuandoAcaoForBuscarComCpfPontuadoRegistradoERetornarUsuarioPreenchido()
         {
             var msgAcao = _fixture.Build<MensagemAcaoUsuario>()
                 .With(msg => msg.Acao, AcaoUsuario.BuscarUsuario)
@@ -99,44 +91,43 @@ namespace Modelo.Application.UnitTests
 
             _cadastrarUsuarioService
                .Setup(mock => mock.BuscarUsuario(cpfPadronizado))
-               .ReturnsAsync(usuario)
-               .Verifiable();
+               .ReturnsAsync(usuario);
 
             _converterUsuario
              .Setup(mock => mock.UsuarioParaUsuarioDto(usuario))
-             .Returns(usuarioDto)
-             .Verifiable();
+             .Returns(usuarioDto);
 
             var appService = InstanciarProcessarMsgAcaoUsuarioAppService();
 
             var retorno = appService.ProcessarMsgAcaoUsuario(msgAcao);
 
             Assert.AreEqual(usuarioDto, retorno.Result.UsuarioDto);
-            Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);
-            _cadastrarUsuarioService.Verify(mock => mock.BuscarUsuario(cpfPadronizado), Times.Once);
-            _converterUsuario.Verify(mock => mock.UsuarioParaUsuarioDto(usuario), Times.Once);
+            Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);          
         }
 
         [Test]
-        public void NaoDeveBuscarUsuarioQuandoAcaoForBuscarECpfNaoForRegistradoERetornarMenssagemUsuarioNaoEncontrado()
+        public void BuscaUsuarioQuandoAcaoForBuscarComCpfNaoRegistradoERetornaMensagemUsuarioNaoEncontrado()
         {
             var msgAcao = _fixture.Build<MensagemAcaoUsuario>()
-                .With(msg => msg.Acao, AcaoUsuario.BuscarUsuario)                
+                .With(msg => msg.Acao, AcaoUsuario.BuscarUsuario)
+                .With(msg => msg.Cpf, "07335080657")
                 .Create();
-            Usuario usuario = null;
-            var msgRetorno = AppConstantes.Api.Erros.NaoEncontrado;
+            
+            var msgRetorno = AppConstantes.Api.Erros.ObjetoNaoEncontrado;
 
             _cadastrarUsuarioService
-               .Setup(mock => mock.BuscarUsuario(msgAcao.Cpf))
-               .ReturnsAsync(usuario)
-               .Verifiable();            
+               .Setup(mock => mock.BuscarUsuario(msgAcao.Cpf));
+
+            _converterUsuario
+             .Setup(mock => mock.UsuarioParaUsuarioDto(It.IsAny<Usuario>()))
+             .Verifiable();
 
             var appService = InstanciarProcessarMsgAcaoUsuarioAppService();
 
             var retorno = appService.ProcessarMsgAcaoUsuario(msgAcao);
          
             Assert.AreEqual(msgRetorno, retorno.Result.MensagemRetorno);
-            _cadastrarUsuarioService.Verify(mock => mock.BuscarUsuario(msgAcao.Cpf), Times.Once);          
+            _converterUsuario.Verify(mock => mock.UsuarioParaUsuarioDto(It.IsAny<Usuario>()), Times.Never);
         }
 
 

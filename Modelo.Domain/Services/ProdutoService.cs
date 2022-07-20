@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Modelo.Domain.Services
 {
-    public class CadastrarProdutoService : ICadastrarProdutoService
+    public class ProdutoService : IProdutoService
     {
         private readonly IProdutoRepository _produtoRepository;
-        public CadastrarProdutoService(IProdutoRepository produtoRepository)
+        public ProdutoService(IProdutoRepository produtoRepository)
         {
             _produtoRepository = produtoRepository;
         }
