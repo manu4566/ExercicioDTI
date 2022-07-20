@@ -33,9 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Utilities", "Utiliti
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{ACB384CF-8189-43F2-B5AF-D171B5B622B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modelo.Shared", "Modelo.Share\Modelo.Shared.csproj", "{BC4CC2B9-3BEF-4A19-AF51-9D5BAD58A905}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Shared", "Modelo.Share\Modelo.Shared.csproj", "{BC4CC2B9-3BEF-4A19-AF51-9D5BAD58A905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modelo.Application.UnitTests", "Modelo.Application.UnitTests\Modelo.Application.UnitTests.csproj", "{198826E6-91F6-482A-AA04-2278680DD23A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelo.Application.UnitTests", "Modelo.Application.UnitTests\Modelo.Application.UnitTests.csproj", "{198826E6-91F6-482A-AA04-2278680DD23A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modelo.Domain.UnitTests", "Modelo.DomainTest\Modelo.Domain.UnitTests.csproj", "{F2281042-2619-4559-8A81-28A925694674}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{198826E6-91F6-482A-AA04-2278680DD23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{198826E6-91F6-482A-AA04-2278680DD23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{198826E6-91F6-482A-AA04-2278680DD23A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2281042-2619-4559-8A81-28A925694674}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2281042-2619-4559-8A81-28A925694674}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2281042-2619-4559-8A81-28A925694674}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2281042-2619-4559-8A81-28A925694674}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{18767A86-631C-4507-8A45-5EFA9A0FC5EC} = {1BA9E148-62F0-4BC6-9FDC-BAC32DF7D458}
 		{BC4CC2B9-3BEF-4A19-AF51-9D5BAD58A905} = {ACB384CF-8189-43F2-B5AF-D171B5B622B5}
 		{198826E6-91F6-482A-AA04-2278680DD23A} = {74311B77-746D-4629-8EF8-2B4A59E4B57A}
+		{F2281042-2619-4559-8A81-28A925694674} = {D428FF5C-3660-4992-B6D6-F1E0CB3C4421}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FCD18C2A-8BFA-4571-AA57-35266C3129F9}

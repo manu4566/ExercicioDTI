@@ -69,7 +69,20 @@ namespace Modelo.Domain.Services
             }          
 
         }
-     
+
+        public async Task<List<Venda>> ObterTodasVendas(string cpf)
+        {
+            try
+            {
+                return await _vendasRepository.ObterTodasVendas(cpf);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
         private async Task<Venda> ObterVenda(Guid id)
         {
             try
@@ -117,19 +130,6 @@ namespace Modelo.Domain.Services
             }
 
             return valorTotal;
-        }
-
-        public async Task<List<Venda>> ObterTodasVendas(string cpf)
-        {
-            try
-            {
-                return await _vendasRepository.ObterTodasVendas(cpf);
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-         
         }
 
         private async Task<List<Produto>> VerificarEstoque(List<ProdutoVendido> produtosVendidos)

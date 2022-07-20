@@ -62,8 +62,7 @@ namespace Modelo.Application.UnitTests
 
             _cadastrarUsuarioService
                .Setup(mock => mock.BuscarUsuario(It.IsAny<string>()))
-               .ReturnsAsync(usuario);
-            //Perguntar ao Italo
+               .ReturnsAsync(usuario);            
             _converterUsuario
              .Setup(mock => mock.UsuarioParaUsuarioDto(It.IsAny<Usuario>()))
              .Returns(usuarioDto);          
