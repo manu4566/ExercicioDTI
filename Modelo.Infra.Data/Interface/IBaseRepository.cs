@@ -8,9 +8,7 @@ namespace Modelo.Infra.Data.Interface
     {
         Task<TableResult> InserirEntidade(TableEntity obj, string nomeTabela);
 
-        Task<TableResult> AtualizarEntidade(TableEntity obj, string nomeTabela);
-
-        Task<TableResult> DeletarEntidade(TableEntity obj, string nomeTabela);
+        Task<TableResult> AtualizarEntidade(TableEntity obj, string nomeTabela);       
 
         Task<TEntity> BuscarEntidade<TEntity>(string partitionKey, string rowKey, string nomeTabela) where TEntity : TableEntity;       
 

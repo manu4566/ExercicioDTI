@@ -30,16 +30,7 @@ namespace Modelo.Infra.Data.Repository
 
             // Executar a operacao
             return await table.ExecuteAsync(merge);
-        }
-         
-
-        public async Task<TableResult> DeletarEntidade(TableEntity obj, string nomeTabela) //ok
-        {
-            TableOperation deleteOperation = TableOperation.Delete(obj);
-            CloudTable table = _azureRepository.ObterTabela(nomeTabela);
-
-            return await table.ExecuteAsync(deleteOperation);
-        }
+        }             
 
         public async Task<TEntity> BuscarEntidade<TEntity>(string partitionKey, string rowKey, string nomeTabela) where TEntity : TableEntity //ok
         {
@@ -65,7 +56,7 @@ namespace Modelo.Infra.Data.Repository
             do
             {
                 var queryResult = await table.ExecuteQuerySegmentedAsync(rangeQuery, token);
-                tableEntities.AddRange(queryResult);
+                tableEntities.AddRange(queryResult.Results);
 
                 //Atualiza o token
                 token = queryResult.ContinuationToken;

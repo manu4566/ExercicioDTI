@@ -20,7 +20,7 @@ namespace Modelo.Infra.Data.Repository
             _baseRepository = baseRepository;
         }
 
-        public async Task InserirUsuario(Usuario usuario)
+        public async Task InserirUsuario(Usuario usuario) 
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Modelo.Infra.Data.Repository
          
         }
 
-        public async Task<Usuario> ObterUsuarioPeloEmail(string email)
+        private async Task<Usuario> ObterUsuarioPeloEmail(string email)
         {
             try 
             {
