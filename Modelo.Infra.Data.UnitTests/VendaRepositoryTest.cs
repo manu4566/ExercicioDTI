@@ -134,6 +134,60 @@ namespace Modelo.Infra.Data.UnitTests
 
         }
 
+        [Test]
+        public void InsereVendaERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+
+            _baseRepository
+              .Setup(mock => mock.InserirEntidade(It.IsAny<VendaEntity>(), It.IsAny<string>()))
+              .ThrowsAsync(exception)
+              .Verifiable();
+
+            var appService = InstanciarVendaRepository();
+            Func<Task> retorno = async () => await appService.InserirVenda(_fixture.Create<Venda>());
+            retorno.Should().ThrowAsync<Exception>();
+        }
+
+        [Test]
+        public void BuscaVendaERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+            var vendaEntity = _fixture.Build<VendaEntity>()
+                           .With(venda => venda.Id, Guid.Empty.ToString())
+                           .Create();
+
+            _baseRepository
+            .Setup(mock => mock.BuscarTodasEntidadesRowKeyAsync<VendaEntity>(It.IsAny<string>(), It.IsAny<string>()))
+            .ThrowsAsync(exception);
+
+            var appService = InstanciarVendaRepository();
+            Func<Task> retorno = async () => await appService.ObterVenda(vendaEntity.Id);
+            retorno.Should().ThrowAsync<Exception>();
+        }
+
+        [Test]
+        public void BuscaTodasAsVendasPorCpfERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+            var vendaEntity = _fixture.Build<VendaEntity>()
+                           .With(venda => venda.Id, Guid.Empty.ToString())
+                           .Create();
+            
+            _baseRepository
+            .Setup(mock => mock.BuscarTodasEntidadesPartitionKeyAsync<VendaEntity>(It.IsAny<string>(), It.IsAny<string>()))
+            .ThrowsAsync(exception);
+
+            var appService = InstanciarVendaRepository();
+            Func<Task> retorno = async () => await appService.ObterTodasVendas(It.IsAny<string>());
+            retorno.Should().ThrowAsync<Exception>();
+       
+        }
+
+
         private VendaRepository InstanciarVendaRepository()
         {
             return new VendaRepository(

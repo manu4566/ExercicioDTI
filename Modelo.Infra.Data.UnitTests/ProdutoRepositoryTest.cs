@@ -150,7 +150,7 @@ namespace Modelo.Infra.Data.UnitTests
         }
 
         [Test]
-        public async Task AtualizaProdutoERetornaExcecao()
+        public void AtualizaProdutoERetornaExcecao()
         {
             var exception = _fixture.Create<Exception>();
 
@@ -159,20 +159,13 @@ namespace Modelo.Infra.Data.UnitTests
              .ThrowsAsync(exception);
 
             var appService = InstanciarProdutoRepository();
-
-            try
-            {
-                await appService.AtualizarProduto(_fixture.Create<Produto>());
-            }
-            catch (Exception ex)
-            {
-                ex.Should().BeEquivalentTo(exception);
-            }
+            Func<Task> retorno = async () => await appService.AtualizarProduto(_fixture.Create<Produto>());
+            retorno.Should().ThrowAsync<Exception>();   
 
         }
 
         [Test]
-        public async Task AtualizaListaDeProdutosERetornaExcecao()
+        public void AtualizaListaDeProdutosERetornaExcecao()
         {
             var exception = _fixture.Create<Exception>();
             var produtos = _fixture.CreateMany<Produto>().ToList();
@@ -183,19 +176,13 @@ namespace Modelo.Infra.Data.UnitTests
                .Verifiable();
 
             var appService = InstanciarProdutoRepository();
-            try
-            {
-                await appService.AtualizarProdutos(produtos);
-            }
-            catch (Exception ex)
-            {
-                ex.Should().BeEquivalentTo(exception);
-            }
+            Func<Task> retorno = async () => await appService.AtualizarProdutos(produtos);
+            retorno.Should().ThrowAsync<Exception>();          
 
         }
 
         [Test]
-        public async Task InsereProdutosERetornaExcecao()
+        public void InsereProdutoERetornaExcecao()
         {
             var exception = _fixture.Create<Exception>();
             var retornoExeption = new Exception();
@@ -206,21 +193,12 @@ namespace Modelo.Infra.Data.UnitTests
               .Verifiable();
 
             var appService = InstanciarProdutoRepository();
-
-            try
-            {
-                await appService.InserirProduto(_fixture.Create<Produto>());
-            }
-            catch (Exception ex)
-            {
-                retornoExeption = ex;
-            }
-
-            retornoExeption.Should().BeEquivalentTo(exception); //Forma mais correta
+            Func<Task> retorno = async () => await appService.InserirProduto(_fixture.Create<Produto>());
+            retorno.Should().ThrowAsync<Exception>();
         }
 
         [Test]
-        public async Task BuscaProdutoERetornaExcecao()
+        public void BuscaProdutoERetornaExcecao()
         {
             var exception = _fixture.Create<Exception>();
             var retornoExeption = new Exception();
@@ -233,17 +211,28 @@ namespace Modelo.Infra.Data.UnitTests
              .ThrowsAsync(exception);
 
             var appService = InstanciarProdutoRepository();
+            Func<Task> retorno = async () => await appService.ObterProduto(produtoEntity.Id);
+            retorno.Should().ThrowAsync<Exception>();            
+         
+        }
 
-            try
-            {
-                var retorno = await appService.ObterProduto(produtoEntity.Id);
-            }
-            catch (Exception ex)
-            {
-                retornoExeption = ex;
-            }
+        [Test]
+        public void BuscaTodosOsProdutosERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+            var produtoEntity = _fixture.Build<ProdutoEntity>()
+                           .With(produto => produto.Id, Guid.Empty.ToString())
+                           .Create();
 
-            retornoExeption.Should().BeEquivalentTo(exception);
+            _baseRepository
+               .Setup(mock => mock.BuscarTodasEntidadesAsync<ProdutoEntity>(It.IsAny<string>()))
+               .ThrowsAsync(exception);
+
+            var appService = InstanciarProdutoRepository();
+            Func<Task> retorno = async () => await appService.ObterTodosProdutos();
+            retorno.Should().ThrowAsync<Exception>();         
+
         }
 
         private ProdutoRepository InstanciarProdutoRepository()

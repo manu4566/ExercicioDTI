@@ -103,6 +103,53 @@ namespace Modelo.Infra.Data.UnitTests
 
         }
 
+        [Test]
+        public void ConfereExistenciaDeDadosRegistradosERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+
+            _baseRepository
+              .Setup(mock => mock.BuscarEntidadesQueryAsync(It.IsAny<TableQuery<UsuarioEntity>>(), It.IsAny<string>()))
+              .ThrowsAsync(exception);
+
+            var appService = InstanciarUsuarioRepository();
+            Func<Task> retorno = async () => await appService.ConferirExistenciaDeCpfEEmail(It.IsAny<string>(), It.IsAny<string>());
+            retorno.Should().ThrowAsync<Exception>();           
+
+        }
+
+        [Test]
+        public void InsereUsuariosERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+
+            _baseRepository
+              .Setup(mock => mock.InserirEntidade(It.IsAny<UsuarioEntity>(), It.IsAny<string>()))
+              .ThrowsAsync(exception)
+              .Verifiable();
+
+            var appService = InstanciarUsuarioRepository();
+            Func<Task> retorno = async () => await appService.InserirUsuario(_fixture.Create<Usuario>());
+            retorno.Should().ThrowAsync<Exception>();       
+        }
+
+        [Test]
+        public void BuscaUsuarioERetornaExcecao()
+        {
+            var exception = _fixture.Create<Exception>();
+            var retornoExeption = new Exception();
+            
+            _baseRepository
+            .Setup(mock => mock.BuscarTodasEntidadesPartitionKeyAsync<UsuarioEntity>(It.IsAny<string>(), It.IsAny<string>()))
+            .ThrowsAsync(exception);
+
+            var appService = InstanciarUsuarioRepository();
+            Func<Task> retorno = async () => await appService.ObterUsuarioPeloCpf(It.IsAny<string>());
+            retorno.Should().ThrowAsync<Exception>();
+        }    
+
         private UsuarioRepository InstanciarUsuarioRepository()
         {
             return new UsuarioRepository(
